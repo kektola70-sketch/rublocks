@@ -1,17 +1,11 @@
-// Конфигурация приложения
 const CONFIG = {
-    // Для разработки используем LocalStorage
-    // Для продакшена замените на реальный API
-    USE_LOCAL_STORAGE: true,
-    
-    // URL вашего бэкенда (если используете)
-    API_URL: 'https://your-backend-url.com/api',
+    // API URL вашего сервера
+    API_URL: 'http://localhost:3000/api',
     
     // Ключи для LocalStorage
     STORAGE_KEYS: {
-        USERS: 'rublocks_users',
-        CURRENT_USER: 'rublocks_current_user',
-        USER_TOKEN: 'rublocks_token'
+        USER_TOKEN: 'rublocks_token',
+        CURRENT_USER: 'rublocks_user'
     },
     
     // Настройки валидации
