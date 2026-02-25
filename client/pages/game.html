@@ -2,16 +2,161 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>RuBlocks - Игра</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Дополнительные стили для мобильных */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Контроллеры для мобильных */
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .mobile-controls.show {
+            display: flex;
+        }
+
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.8);
+            border: 3px solid white;
+            color: white;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.1s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.9);
+            background: rgba(118, 75, 162, 0.8);
+        }
+
+        /* Джойстик для мобильных */
+        .joystick-container {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 150px;
+            height: 150px;
+            z-index: 1000;
+        }
+
+        .joystick-container.show {
+            display: block;
+        }
+
+        .joystick-base {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .joystick-stick {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.9);
+            border: 3px solid white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Индикатор устройства */
+        .device-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+        /* Адаптивный canvas */
+        #game-canvas {
+            display: block;
+            touch-action: none;
+        }
+
+        /* Мобильный header */
+        @media (max-width: 768px) {
+            .game-header {
+                padding: 10px;
+                font-size: 14px;
+                flex-wrap: wrap;
+            }
+
+            .user-info {
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            .user-info span {
+                white-space: nowrap;
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .btn-logout {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            #game-info {
+                bottom: 120px;
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; overflow: hidden;">
+<body>
     
     <!-- Экран загрузки -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Загрузка игры...</div>
+        <p id="device-loading" style="color: #999; margin-top: 20px; font-size: 14px;">
+            Определение устройства...
+        </p>
     </div>
 
     <!-- Главный контейнер -->
@@ -20,18 +165,38 @@
             <div class="user-info">
                 <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
                 <span>👤 <strong id="username">Загрузка...</strong></span>
-                <span>⭐ Ур. <strong id="level">1</strong></span>
-                <span>🏆 Рекорд: <strong id="high-score">0</strong></span>
-                <span>💰 Монеты: <strong id="coins">0</strong></span>
-                <span>📊 Счёт: <strong id="current-score">0</strong></span>
+                <span>⭐ <strong id="level">1</strong></span>
+                <span>🏆 <strong id="high-score">0</strong></span>
+                <span>💰 <strong id="coins">0</strong></span>
+                <span>📊 <strong id="current-score">0</strong></span>
             </div>
             <button class="btn-logout" onclick="handleLogout()">Выход</button>
         </div>
 
         <canvas id="game-canvas"></canvas>
 
+        <!-- Информация об управлении -->
         <div id="game-info">
-            <p>🎮 Нажмите <strong>ПРОБЕЛ</strong> чтобы добавить очки</p>
+            <p id="control-info">Загрузка...</p>
+        </div>
+
+        <!-- Индикатор устройства -->
+        <div class="device-indicator" id="device-indicator">
+            🖥️ ПК
+        </div>
+
+        <!-- Мобильные контроллеры -->
+        <div class="mobile-controls" id="mobile-controls">
+            <button class="control-btn" id="btn-left">⬅️</button>
+            <button class="control-btn" id="btn-jump">⬆️</button>
+            <button class="control-btn" id="btn-right">➡️</button>
+        </div>
+
+        <!-- Джойстик (альтернативное управление) -->
+        <div class="joystick-container" id="joystick-container">
+            <div class="joystick-base">
+                <div class="joystick-stick" id="joystick-stick"></div>
+            </div>
         </div>
     </div>
 
@@ -42,10 +207,8 @@
 
     <script>
         // ==========================================
-        // ВСТРОЕННЫЙ КОД ИГРЫ
-        // ==========================================
-
         // Firebase Configuration
+        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyA76Du2jnVguJavcO7k6XFEQJ0tPhHF_UI",
             authDomain: "rublocks-2862b.firebaseapp.com",
@@ -55,15 +218,92 @@
             appId: "1:1035853997972:web:77cf13e7197b9387cd9181"
         };
 
-        // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        console.log('✅ Firebase инициализирован');
+        // ==========================================
+        // ОПРЕДЕЛЕНИЕ УСТРОЙСТВА
+        // ==========================================
+        
+        class DeviceDetector {
+            constructor() {
+                this.isMobile = this.checkMobile();
+                this.isTablet = this.checkTablet();
+                this.isDesktop = !this.isMobile && !this.isTablet;
+                this.isTouchDevice = this.checkTouch();
+                this.os = this.detectOS();
+                this.browser = this.detectBrowser();
+                
+                console.log('🔍 Устройство определено:', this.getDeviceInfo());
+            }
+
+            checkMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                       (window.innerWidth <= 768);
+            }
+
+            checkTablet() {
+                return /iPad|Android/i.test(navigator.userAgent) && 
+                       (window.innerWidth >= 768 && window.innerWidth <= 1024);
+            }
+
+            checkTouch() {
+                return 'ontouchstart' in window || 
+                       navigator.maxTouchPoints > 0 || 
+                       navigator.msMaxTouchPoints > 0;
+            }
+
+            detectOS() {
+                const ua = navigator.userAgent;
+                if (/Android/i.test(ua)) return 'Android';
+                if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
+                if (/Windows/i.test(ua)) return 'Windows';
+                if (/Mac/i.test(ua)) return 'macOS';
+                if (/Linux/i.test(ua)) return 'Linux';
+                return 'Unknown';
+            }
+
+            detectBrowser() {
+                const ua = navigator.userAgent;
+                if (/Chrome/i.test(ua)) return 'Chrome';
+                if (/Safari/i.test(ua)) return 'Safari';
+                if (/Firefox/i.test(ua)) return 'Firefox';
+                if (/Edge/i.test(ua)) return 'Edge';
+                return 'Unknown';
+            }
+
+            getDeviceInfo() {
+                return {
+                    type: this.isDesktop ? 'Desktop' : this.isTablet ? 'Tablet' : 'Mobile',
+                    os: this.os,
+                    browser: this.browser,
+                    touch: this.isTouchDevice,
+                    screen: `${window.innerWidth}x${window.innerHeight}`
+                };
+            }
+
+            getDeviceIcon() {
+                if (this.isMobile) return '📱';
+                if (this.isTablet) return '📱';
+                return '🖥️';
+            }
+
+            getDeviceType() {
+                if (this.isMobile) return 'Mobile';
+                if (this.isTablet) return 'Tablet';
+                return 'Desktop';
+            }
+        }
+
+        const device = new DeviceDetector();
+
+        // Обновляем индикатор устройства
+        document.getElementById('device-loading').textContent = 
+            `${device.getDeviceIcon()} ${device.getDeviceType()} - ${device.os}`;
 
         // ==========================================
-        // ИГРА
+        // ИГРА С АДАПТИВНЫМ УПРАВЛЕНИЕМ
         // ==========================================
         
         let game = {
@@ -73,6 +313,22 @@
             score: 0,
             coins: 0,
             startTime: Date.now(),
+            player: {
+                x: 100,
+                y: 0,
+                vx: 0,
+                vy: 0,
+                width: 40,
+                height: 60,
+                jumping: false,
+                onGround: false
+            },
+            keys: {},
+            joystick: {
+                active: false,
+                x: 0,
+                y: 0
+            },
 
             init: function(user) {
                 this.user = user;
@@ -80,25 +336,42 @@
                 this.ctx = this.canvas.getContext('2d');
 
                 // Настройка размера
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight - 70;
+                this.resizeCanvas();
 
                 // Обновление UI
-                document.getElementById('username').textContent = user.displayName || user.email.split('@')[0];
-                document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`;
+                this.updateUI();
 
                 // Загрузка статистики
                 this.loadStats();
+
+                // Настройка управления в зависимости от устройства
+                this.setupControls();
 
                 // Скрытие загрузки
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('game-main').style.display = 'flex';
 
-                // Запуск
-                this.draw();
-                this.bindEvents();
+                // Обновляем индикатор устройства
+                const indicator = document.getElementById('device-indicator');
+                indicator.innerHTML = `${device.getDeviceIcon()} ${device.getDeviceType()}<br><small>${device.os}</small>`;
 
-                console.log('✅ Игра запущена');
+                // Запуск игрового цикла
+                this.player.y = this.canvas.height - 100;
+                this.gameLoop();
+
+                console.log('✅ Игра запущена на', device.getDeviceType());
+            },
+
+            resizeCanvas: function() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight - (device.isMobile ? 60 : 70);
+            },
+
+            updateUI: function() {
+                document.getElementById('username').textContent = 
+                    this.user.displayName || this.user.email.split('@')[0];
+                document.getElementById('user-avatar').src = 
+                    `https://api.dicebear.com/7.x/avataaars/svg?seed=${this.user.uid}`;
             },
 
             loadStats: async function() {
@@ -115,8 +388,160 @@
                 }
             },
 
+            setupControls: function() {
+                if (device.isMobile || device.isTablet) {
+                    this.setupMobileControls();
+                } else {
+                    this.setupDesktopControls();
+                }
+
+                // Обработка изменения размера окна
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+            },
+
+            setupDesktopControls: function() {
+                document.getElementById('control-info').innerHTML = 
+                    '⌨️ <strong>Управление:</strong> СТРЕЛКИ - движение, ПРОБЕЛ - прыжок';
+
+                // Клавиатура
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.code] = true;
+                    
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.jump();
+                    }
+                });
+
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.code] = false;
+                });
+
+                // Клик мышью для добавления очков
+                this.canvas.addEventListener('click', () => {
+                    this.addScore(5);
+                    this.addCoins(1);
+                });
+            },
+
+            setupMobileControls: function() {
+                document.getElementById('control-info').innerHTML = 
+                    '📱 <strong>Управление:</strong> Кнопки или свайп';
+
+                // Показываем мобильные контроллеры
+                const controls = document.getElementById('mobile-controls');
+                controls.classList.add('show');
+
+                // Кнопка влево
+                const btnLeft = document.getElementById('btn-left');
+                btnLeft.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.keys.ArrowLeft = true;
+                });
+                btnLeft.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.keys.ArrowLeft = false;
+                });
+
+                // Кнопка вправо
+                const btnRight = document.getElementById('btn-right');
+                btnRight.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.keys.ArrowRight = true;
+                });
+                btnRight.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.keys.ArrowRight = false;
+                });
+
+                // Кнопка прыжка
+                const btnJump = document.getElementById('btn-jump');
+                btnJump.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.jump();
+                });
+
+                // Свайпы
+                this.setupSwipeControls();
+
+                // Тап по canvas для очков
+                this.canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) { // Два пальца
+                        e.preventDefault();
+                        this.addScore(5);
+                        this.addCoins(1);
+                    }
+                });
+            },
+
+            setupSwipeControls: function() {
+                let touchStartX = 0;
+                let touchStartY = 0;
+
+                this.canvas.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                });
+
+                this.canvas.addEventListener('touchend', (e) => {
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const touchEndY = e.changedTouches[0].clientY;
+
+                    const diffX = touchEndX - touchStartX;
+                    const diffY = touchEndY - touchStartY;
+
+                    // Свайп вверх - прыжок
+                    if (Math.abs(diffY) > Math.abs(diffX) && diffY < -30) {
+                        this.jump();
+                    }
+                });
+            },
+
+            jump: function() {
+                if (this.player.onGround) {
+                    this.player.vy = -15;
+                    this.player.jumping = true;
+                    this.player.onGround = false;
+                    this.addScore(2);
+                }
+            },
+
+            updatePlayer: function() {
+                // Гравитация
+                this.player.vy += 0.8;
+
+                // Движение
+                if (this.keys.ArrowLeft || this.keys.KeyA) {
+                    this.player.vx = -5;
+                } else if (this.keys.ArrowRight || this.keys.KeyD) {
+                    this.player.vx = 5;
+                } else {
+                    this.player.vx *= 0.8; // Трение
+                }
+
+                // Применение скорости
+                this.player.x += this.player.vx;
+                this.player.y += this.player.vy;
+
+                // Границы
+                const groundY = this.canvas.height - 100;
+                if (this.player.y >= groundY) {
+                    this.player.y = groundY;
+                    this.player.vy = 0;
+                    this.player.onGround = true;
+                    this.player.jumping = false;
+                }
+
+                if (this.player.x < 0) this.player.x = 0;
+                if (this.player.x > this.canvas.width - this.player.width) {
+                    this.player.x = this.canvas.width - this.player.width;
+                }
+            },
+
             draw: function() {
-                // Фон
+                // Очистка
                 this.ctx.fillStyle = '#87CEEB';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -124,42 +549,35 @@
                 this.ctx.fillStyle = '#90EE90';
                 this.ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 50);
 
-                // Текст
+                // Игрок
+                this.ctx.fillStyle = '#667eea';
+                this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+
+                // Лицо игрока
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.beginPath();
+                this.ctx.arc(this.player.x + 20, this.player.y + 20, 15, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Заголовок
+                const fontSize = device.isMobile ? 24 : 36;
                 this.ctx.fillStyle = '#000';
-                this.ctx.font = 'bold 48px Arial';
+                this.ctx.font = `bold ${fontSize}px Arial`;
                 this.ctx.textAlign = 'center';
-                this.ctx.fillText('🎮 RuBlocks', this.canvas.width / 2, 100);
+                this.ctx.fillText('🎮 RuBlocks', this.canvas.width / 2, 40);
 
-                this.ctx.font = '28px Arial';
-                this.ctx.fillText(`Добро пожаловать, ${this.user.displayName || 'Игрок'}!`, 
-                                 this.canvas.width / 2, 160);
-
-                this.ctx.font = '20px Arial';
-                this.ctx.fillStyle = '#666';
-                this.ctx.fillText('Нажмите ПРОБЕЛ чтобы добавить очки', 
-                                 this.canvas.width / 2, 220);
-
+                // Счёт
                 if (this.score > 0) {
-                    this.ctx.font = 'bold 36px Arial';
+                    this.ctx.font = `bold ${device.isMobile ? 20 : 28}px Arial`;
                     this.ctx.fillStyle = '#667eea';
-                    this.ctx.fillText(`Счёт: ${this.score}`, this.canvas.width / 2, 300);
+                    this.ctx.fillText(`Счёт: ${this.score}`, this.canvas.width / 2, 80);
                 }
             },
 
-            bindEvents: function() {
-                document.addEventListener('keydown', (e) => {
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        this.addScore(10);
-                        this.addCoins(1);
-                    }
-                });
-
-                window.addEventListener('resize', () => {
-                    this.canvas.width = window.innerWidth;
-                    this.canvas.height = window.innerHeight - 70;
-                    this.draw();
-                });
+            gameLoop: function() {
+                this.updatePlayer();
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
             },
 
             addScore: function(points) {
@@ -170,8 +588,6 @@
                 if (this.score > highScore) {
                     document.getElementById('high-score').textContent = this.score;
                 }
-
-                this.draw();
             },
 
             addCoins: function(amount) {
@@ -183,7 +599,6 @@
             saveStats: async function() {
                 try {
                     const playTime = Math.floor((Date.now() - this.startTime) / 1000);
-                    
                     const userRef = db.collection('users').doc(this.user.uid);
                     const doc = await userRef.get();
                     
@@ -194,7 +609,9 @@
                             'stats.gamesPlayed': (currentStats.gamesPlayed || 0) + 1,
                             'stats.highScore': Math.max(currentStats.highScore || 0, this.score),
                             'stats.coins': (currentStats.coins || 0) + this.coins,
-                            'stats.totalPlayTime': (currentStats.totalPlayTime || 0) + playTime
+                            'stats.totalPlayTime': (currentStats.totalPlayTime || 0) + playTime,
+                            'lastDevice': device.getDeviceType(),
+                            'lastOS': device.os
                         });
                         
                         console.log('✅ Статистика сохранена');
@@ -206,7 +623,7 @@
         };
 
         // ==========================================
-        // АВТОРИЗАЦИЯ И ЗАПУСК
+        // АВТОРИЗАЦИЯ
         // ==========================================
         
         auth.onAuthStateChanged((user) => {
@@ -214,7 +631,7 @@
                 console.log('✅ Пользователь:', user.email);
                 game.init(user);
             } else {
-                console.log('❌ Не авторизован, перенаправление...');
+                console.log('❌ Не авторизован');
                 window.location.href = '../index.html';
             }
         });
@@ -230,12 +647,12 @@
             }
         }
 
-        // Автосохранение при закрытии
+        // Автосохранение
         window.addEventListener('beforeunload', () => {
             game.saveStats();
         });
 
-        console.log('✅ Скрипты игры загружены');
+        console.log('✅ Игра загружена для', device.getDeviceType());
     </script>
 </body>
 </html>
