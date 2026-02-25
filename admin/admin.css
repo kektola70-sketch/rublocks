@@ -253,3 +253,217 @@
     margin-top: 0;
     color: #667eea;
 }
+
+.chart-section {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+/* Поиск */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Настройки */
+.settings-section {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    color: #667eea;
+}
+
+.setting-item {
+    margin-bottom: 20px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.setting-item input[type="number"],
+.setting-item input[type="text"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.setting-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.btn-large {
+    padding: 15px 40px;
+    font-size: 18px;
+}
+
+.btn-danger {
+    padding: 12px 25px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 10px 5px;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Логи */
+.logs-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.logs-container {
+    background: #1e1e1e;
+    color: #00ff00;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
+    height: 500px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    gap: 15px;
+}
+
+.log-time {
+    color: #888;
+    min-width: 80px;
+}
+
+.log-message {
+    flex: 1;
+}
+
+.log-info {
+    color: #00ff00;
+}
+
+.log-warning {
+    color: #ffaa00;
+}
+
+.log-error {
+    color: #ff4444;
+}
+
+/* Страница отказа в доступе */
+.access-denied-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 40px;
+}
+
+.access-denied-icon {
+    font-size: 120px;
+    margin-bottom: 20px;
+}
+
+.access-denied-container h1 {
+    font-size: 48px;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.access-denied-container p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Экран загрузки */
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f0f0f0;
+    border-top: 5px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #667eea;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .admin-content {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-nav {
+        overflow-x: auto;
+        padding: 0 20px;
+    }
+}
