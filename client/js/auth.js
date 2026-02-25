@@ -1,16 +1,12 @@
-// Система авторизации для RuBlocks
-
 class AuthSystem {
     constructor() {
         this.currentUser = null;
+        this.token = null;
         this.init();
     }
 
     init() {
-        // Проверяем, авторизован ли уже пользователь
         this.checkAuth();
-        
-        // Привязываем обработчики событий
         this.bindEvents();
     }
 
@@ -27,47 +23,82 @@ class AuthSystem {
         }
     }
 
-    // Проверка авторизации
-    checkAuth() {
+    async checkAuth() {
         const token = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_TOKEN);
-        const userData = localStorage.getItem(CONFIG.STORAGE_KEYS.CURRENT_USER);
 
-        if (token && userData) {
-            this.currentUser = JSON.parse(userData);
-            // Если мы на странице авторизации - перенаправляем в игру
-            if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-                window.location.href = 'pages/game.html';
+        if (token) {
+            try {
+                // Проверяем токен на сервере
+                const response = await fetch(`${CONFIG.API_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.currentUser = data.user;
+                    this.token = token;
+                    
+                    // Перенаправляем в игру если на странице входа
+                    if (window.location.pathname.includes('index.html') || 
+                        window.location.pathname === '/') {
+                        window.location.href = 'pages/game.html';
+                    }
+                } else {
+                    // Токен невалидный, удаляем
+                    this.clearAuth();
+                }
+            } catch (error) {
+                console.error('Ошибка проверки авторизации:', error);
+                this.clearAuth();
             }
         }
     }
 
-    // Обработка входа
     async handleLogin(e) {
         e.preventDefault();
         
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         const errorElement = document.getElementById('login-error');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
         try {
-            const result = await this.login(email, password);
-            
-            if (result.success) {
-                // Сохраняем данные пользователя
-                localStorage.setItem(CONFIG.STORAGE_KEYS.USER_TOKEN, result.token);
-                localStorage.setItem(CONFIG.STORAGE_KEYS.CURRENT_USER, JSON.stringify(result.user));
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Вход...';
+
+            const response = await fetch(`${CONFIG.API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Сохраняем токен и данные пользователя
+                localStorage.setItem(CONFIG.STORAGE_KEYS.USER_TOKEN, data.token);
+                localStorage.setItem(CONFIG.STORAGE_KEYS.CURRENT_USER, JSON.stringify(data.user));
                 
                 // Перенаправляем в игру
                 window.location.href = 'pages/game.html';
             } else {
-                errorElement.textContent = result.message;
+                errorElement.textContent = data.message || 'Ошибка входа';
             }
+
         } catch (error) {
-            errorElement.textContent = 'Ошибка входа. Попробуйте снова.';
+            console.error('Ошибка входа:', error);
+            errorElement.textContent = 'Ошибка соединения с сервером';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Войти';
         }
     }
 
-    // Обработка регистрации
     async handleRegister(e) {
         e.preventDefault();
         
@@ -76,8 +107,9 @@ class AuthSystem {
         const password = document.getElementById('register-password').value;
         const passwordConfirm = document.getElementById('register-password-confirm').value;
         const errorElement = document.getElementById('register-error');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
-        // Валидация
+        // Валидация на клиенте
         if (password !== passwordConfirm) {
             errorElement.textContent = 'Пароли не совпадают!';
             return;
@@ -88,127 +120,115 @@ class AuthSystem {
             return;
         }
 
-        if (username.length < CONFIG.VALIDATION.MIN_USERNAME_LENGTH) {
-            errorElement.textContent = `Имя должно быть минимум ${CONFIG.VALIDATION.MIN_USERNAME_LENGTH} символа!`;
-            return;
-        }
-
         try {
-            const result = await this.register(username, email, password);
-            
-            if (result.success) {
-                errorElement.className = 'success-message';
-                errorElement.textContent = 'Регистрация успешна! Войдите в аккаунт.';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Регистрация...';
+
+            const response = await fetch(`${CONFIG.API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Сохраняем токен и данные пользователя
+                localStorage.setItem(CONFIG.STORAGE_KEYS.USER_TOKEN, data.token);
+                localStorage.setItem(CONFIG.STORAGE_KEYS.CURRENT_USER, JSON.stringify(data.user));
                 
-                // Переключаемся на форму входа
+                errorElement.className = 'success-message';
+                errorElement.textContent = 'Регистрация успешна! Перенаправление...';
+                
+                // Перенаправляем в игру
                 setTimeout(() => {
-                    showTab('login');
-                    document.getElementById('login-email').value = email;
-                }, 1500);
+                    window.location.href = 'pages/game.html';
+                }, 1000);
             } else {
                 errorElement.className = 'error-message';
-                errorElement.textContent = result.message;
+                errorElement.textContent = data.message || 'Ошибка регистрации';
             }
+
         } catch (error) {
-            errorElement.textContent = 'Ошибка регистрации. Попробуйте снова.';
+            console.error('Ошибка регистрации:', error);
+            errorElement.className = 'error-message';
+            errorElement.textContent = 'Ошибка соединения с сервером';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Зарегистрироваться';
         }
     }
 
-    // Метод входа (LocalStorage версия)
-    async login(email, password) {
-        if (CONFIG.USE_LOCAL_STORAGE) {
-            const users = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USERS) || '[]');
-            const user = users.find(u => u.email === email);
+    async logout() {
+        const token = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_TOKEN);
 
-            if (!user) {
-                return { success: false, message: 'Пользователь не найден!' };
+        if (token) {
+            try {
+                await fetch(`${CONFIG.API_URL}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            } catch (error) {
+                console.error('Ошибка выхода:', error);
             }
-
-            // Простая проверка пароля (в реальном приложении используйте хеширование!)
-            if (user.password !== this.hashPassword(password)) {
-                return { success: false, message: 'Неверный пароль!' };
-            }
-
-            const token = this.generateToken();
-            
-            return {
-                success: true,
-                token: token,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email
-                }
-            };
         }
-        
-        // Здесь будет код для реального API
-        // const response = await fetch(`${CONFIG.API_URL}/login`, { ... });
-    }
 
-    // Метод регистрации (LocalStorage версия)
-    async register(username, email, password) {
-        if (CONFIG.USE_LOCAL_STORAGE) {
-            const users = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USERS) || '[]');
-            
-            // Проверяем, существует ли пользователь
-            if (users.find(u => u.email === email)) {
-                return { success: false, message: 'Email уже зарегистрирован!' };
-            }
-
-            if (users.find(u => u.username === username)) {
-                return { success: false, message: 'Имя пользователя уже занято!' };
-            }
-
-            // Создаём нового пользователя
-            const newUser = {
-                id: Date.now().toString(),
-                username: username,
-                email: email,
-                password: this.hashPassword(password),
-                createdAt: new Date().toISOString(),
-                stats: {
-                    gamesPlayed: 0,
-                    highScore: 0
-                }
-            };
-
-            users.push(newUser);
-            localStorage.setItem(CONFIG.STORAGE_KEYS.USERS, JSON.stringify(users));
-
-            return { success: true };
-        }
-        
-        // Здесь будет код для реального API
-    }
-
-    // Простое хеширование (для продакшена используйте bcrypt на сервере!)
-    hashPassword(password) {
-        let hash = 0;
-        for (let i = 0; i < password.length; i++) {
-            const char = password.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        return hash.toString();
-    }
-
-    // Генерация токена
-    generateToken() {
-        return Math.random().toString(36).substring(2) + Date.now().toString(36);
-    }
-
-    // Выход
-    logout() {
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_TOKEN);
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.CURRENT_USER);
+        this.clearAuth();
         window.location.href = '../index.html';
     }
 
-    // Получить текущего пользователя
+    clearAuth() {
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_TOKEN);
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.CURRENT_USER);
+        this.currentUser = null;
+        this.token = null;
+    }
+
     getCurrentUser() {
+        if (this.currentUser) return this.currentUser;
+        
         const userData = localStorage.getItem(CONFIG.STORAGE_KEYS.CURRENT_USER);
         return userData ? JSON.parse(userData) : null;
+    }
+
+    getToken() {
+        if (this.token) return this.token;
+        return localStorage.getItem(CONFIG.STORAGE_KEYS.USER_TOKEN);
+    }
+
+    // Обновление статистики игрока
+    async updateStats(stats) {
+        const token = this.getToken();
+
+        try {
+            const response = await fetch(`${CONFIG.API_URL}/auth/stats`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(stats)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Обновляем локальные данные
+                const user = this.getCurrentUser();
+                user.stats = data.stats;
+                localStorage.setItem(CONFIG.STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Ошибка обновления статистики:', error);
+            return false;
+        }
     }
 }
 
@@ -231,5 +251,5 @@ function showTab(tab) {
     }
 }
 
-// Инициализация системы авторизации
+// Инициализация
 const auth = new AuthSystem();
