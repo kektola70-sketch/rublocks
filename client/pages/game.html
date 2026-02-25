@@ -5,145 +5,237 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RuBlocks - Игра</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        
-        #current-score,
-        #coins,
-        #level {
-            transition: transform 0.2s;
-        }
-    </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; overflow: hidden;">
+    
     <!-- Экран загрузки -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Загрузка игры...</div>
-        <p style="color: #999; margin-top: 20px; font-size: 14px;">
-            Подключение к Firebase...
-        </p>
     </div>
 
-    <!-- Главный контейнер игры -->
+    <!-- Главный контейнер -->
     <div class="game-container" id="game-main" style="display: none;">
-        <!-- Шапка с информацией об игроке -->
         <div class="game-header">
             <div class="user-info">
-                <img id="user-avatar" class="user-avatar" src="https://via.placeholder.com/45" alt="Avatar">
+                <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
                 <span>👤 <strong id="username">Загрузка...</strong></span>
                 <span>⭐ Ур. <strong id="level">1</strong></span>
                 <span>🏆 Рекорд: <strong id="high-score">0</strong></span>
                 <span>💰 Монеты: <strong id="coins">0</strong></span>
                 <span>📊 Счёт: <strong id="current-score">0</strong></span>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-logout" onclick="handleLogout()">Выход</button>
-            </div>
+            <button class="btn-logout" onclick="handleLogout()">Выход</button>
         </div>
 
-        <!-- Игровой холст -->
         <canvas id="game-canvas"></canvas>
 
-        <!-- Информационное сообщение -->
         <div id="game-info">
-            <p>🎮 Нажмите <strong>ПРОБЕЛ</strong> или <strong>КЛИКНИТЕ</strong> чтобы добавить очки</p>
+            <p>🎮 Нажмите <strong>ПРОБЕЛ</strong> чтобы добавить очки</p>
         </div>
     </div>
 
-    <!-- Firebase SDK (compat версия) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <!-- Наши скрипты В ПРАВИЛЬНОМ ПОРЯДКЕ -->
-    <script src="../js/firebase-config.js"></script>
-    <script src="../js/database.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/admin-check.js"></script>
-    <script src="../js/game.js"></script>
-
-    <!-- Дополнительные функции -->
     <script>
-        // ========================================
-        // Обработчик выхода
-        // ========================================
-        async function handleLogout() {
-            if (confirm('Вы уверены, что хотите выйти? Ваш прогресс будет сохранён.')) {
+        // ==========================================
+        // ВСТРОЕННЫЙ КОД ИГРЫ
+        // ==========================================
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA76Du2jnVguJavcO7k6XFEQJ0tPhHF_UI",
+            authDomain: "rublocks-2862b.firebaseapp.com",
+            projectId: "rublocks-2862b",
+            storageBucket: "rublocks-2862b.firebasestorage.app",
+            messagingSenderId: "1035853997972",
+            appId: "1:1035853997972:web:77cf13e7197b9387cd9181"
+        };
+
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        console.log('✅ Firebase инициализирован');
+
+        // ==========================================
+        // ИГРА
+        // ==========================================
+        
+        let game = {
+            canvas: null,
+            ctx: null,
+            user: null,
+            score: 0,
+            coins: 0,
+            startTime: Date.now(),
+
+            init: function(user) {
+                this.user = user;
+                this.canvas = document.getElementById('game-canvas');
+                this.ctx = this.canvas.getContext('2d');
+
+                // Настройка размера
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight - 70;
+
+                // Обновление UI
+                document.getElementById('username').textContent = user.displayName || user.email.split('@')[0];
+                document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`;
+
+                // Загрузка статистики
+                this.loadStats();
+
+                // Скрытие загрузки
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('game-main').style.display = 'flex';
+
+                // Запуск
+                this.draw();
+                this.bindEvents();
+
+                console.log('✅ Игра запущена');
+            },
+
+            loadStats: async function() {
                 try {
-                    console.log('💾 Сохранение прогресса...');
-                    
-                    // Сохраняем игру перед выходом
-                    if (window.game && typeof window.game.saveGameData === 'function') {
-                        await window.game.saveGameData();
+                    const doc = await db.collection('users').doc(this.user.uid).get();
+                    if (doc.exists) {
+                        const stats = doc.data().stats || {};
+                        document.getElementById('level').textContent = stats.level || 1;
+                        document.getElementById('high-score').textContent = stats.highScore || 0;
+                        document.getElementById('coins').textContent = stats.coins || 0;
                     }
-                    
-                    console.log('👋 Выход...');
-                    await authSystem.logout();
-                    
                 } catch (error) {
-                    console.error('❌ Ошибка выхода:', error);
-                    alert('Произошла ошибка при выходе');
+                    console.error('Ошибка загрузки статистики:', error);
                 }
+            },
+
+            draw: function() {
+                // Фон
+                this.ctx.fillStyle = '#87CEEB';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Земля
+                this.ctx.fillStyle = '#90EE90';
+                this.ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 50);
+
+                // Текст
+                this.ctx.fillStyle = '#000';
+                this.ctx.font = 'bold 48px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('🎮 RuBlocks', this.canvas.width / 2, 100);
+
+                this.ctx.font = '28px Arial';
+                this.ctx.fillText(`Добро пожаловать, ${this.user.displayName || 'Игрок'}!`, 
+                                 this.canvas.width / 2, 160);
+
+                this.ctx.font = '20px Arial';
+                this.ctx.fillStyle = '#666';
+                this.ctx.fillText('Нажмите ПРОБЕЛ чтобы добавить очки', 
+                                 this.canvas.width / 2, 220);
+
+                if (this.score > 0) {
+                    this.ctx.font = 'bold 36px Arial';
+                    this.ctx.fillStyle = '#667eea';
+                    this.ctx.fillText(`Счёт: ${this.score}`, this.canvas.width / 2, 300);
+                }
+            },
+
+            bindEvents: function() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.addScore(10);
+                        this.addCoins(1);
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    this.canvas.width = window.innerWidth;
+                    this.canvas.height = window.innerHeight - 70;
+                    this.draw();
+                });
+            },
+
+            addScore: function(points) {
+                this.score += points;
+                document.getElementById('current-score').textContent = this.score;
+
+                const highScore = parseInt(document.getElementById('high-score').textContent);
+                if (this.score > highScore) {
+                    document.getElementById('high-score').textContent = this.score;
+                }
+
+                this.draw();
+            },
+
+            addCoins: function(amount) {
+                this.coins += amount;
+                const current = parseInt(document.getElementById('coins').textContent);
+                document.getElementById('coins').textContent = current + amount;
+            },
+
+            saveStats: async function() {
+                try {
+                    const playTime = Math.floor((Date.now() - this.startTime) / 1000);
+                    
+                    const userRef = db.collection('users').doc(this.user.uid);
+                    const doc = await userRef.get();
+                    
+                    if (doc.exists) {
+                        const currentStats = doc.data().stats || {};
+                        
+                        await userRef.update({
+                            'stats.gamesPlayed': (currentStats.gamesPlayed || 0) + 1,
+                            'stats.highScore': Math.max(currentStats.highScore || 0, this.score),
+                            'stats.coins': (currentStats.coins || 0) + this.coins,
+                            'stats.totalPlayTime': (currentStats.totalPlayTime || 0) + playTime
+                        });
+                        
+                        console.log('✅ Статистика сохранена');
+                    }
+                } catch (error) {
+                    console.error('❌ Ошибка сохранения:', error);
+                }
+            }
+        };
+
+        // ==========================================
+        // АВТОРИЗАЦИЯ И ЗАПУСК
+        // ==========================================
+        
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('✅ Пользователь:', user.email);
+                game.init(user);
+            } else {
+                console.log('❌ Не авторизован, перенаправление...');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // ==========================================
+        // ВЫХОД
+        // ==========================================
+        
+        async function handleLogout() {
+            if (confirm('Выйти? Прогресс будет сохранён.')) {
+                await game.saveStats();
+                await auth.signOut();
             }
         }
 
-        // ========================================
-        // Проверка прав админа
-        // ========================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user && authSystem.getCurrentUser()) {
-                const currentUser = authSystem.getCurrentUser();
-                
-                // Если пользователь админ - показываем кнопку админ-панели
-                if (adminSystem && adminSystem.isAdmin(currentUser)) {
-                    adminSystem.showAdminButton();
-                    console.log('🔑 Права администратора активированы');
-                }
-            }
-        });
-
-        // ========================================
         // Автосохранение при закрытии
-        // ========================================
-        window.addEventListener('beforeunload', (e) => {
-            if (window.game && typeof window.game.saveGameData === 'function') {
-                window.game.saveGameData();
-            }
+        window.addEventListener('beforeunload', () => {
+            game.saveStats();
         });
 
-        // ========================================
-        // Обработка ошибок
-        // ========================================
-        window.addEventListener('error', (e) => {
-            console.error('💥 Ошибка:', e.error);
-        });
-
-        // ========================================
-        // Горячие клавиши
-        // ========================================
-        document.addEventListener('keydown', (e) => {
-            // ESC - меню
-            if (e.key === 'Escape') {
-                console.log('⏸️ ESC нажат');
-            }
-            
-            // R - перезапуск
-            if (e.key === 'r' || e.key === 'R') {
-                if (window.game && typeof window.game.restart === 'function') {
-                    if (confirm('Начать игру заново?')) {
-                        window.game.restart();
-                    }
-                }
-            }
-        });
-
-        console.log('✅ game.html загружен');
-        console.log('⌨️ Горячие клавиши: ПРОБЕЛ - очки, R - перезапуск, ESC - меню');
+        console.log('✅ Скрипты игры загружены');
     </script>
 </body>
 </html>
