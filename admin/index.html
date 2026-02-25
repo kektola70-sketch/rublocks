@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuBlocks - Админ-панель</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Проверка доступа -->
+        <div id="access-check" class="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Проверка прав доступа...</div>
+        </div>
+
+        <!-- Главная панель (скрыта до проверки) -->
+        <div id="admin-panel" style="display: none;">
+            <!-- Шапка -->
+            <div class="admin-header">
+                <div class="admin-header-left">
+                    <h1>⚙️ RuBlocks Admin Panel</h1>
+                    <p class="admin-user">Администратор: <strong id="admin-name">tolikpro128</strong></p>
+                </div>
+                <div class="admin-header-right">
+                    <button class="btn-game" onclick="window.location.href='../pages/game.html'">
+                        🎮 В игру
+                    </button>
+                    <button class="btn-logout" onclick="authSystem.logout()">Выход</button>
+                </div>
+            </div>
+
+            <!-- Навигация -->
+            <div class="admin-nav">
+                <button class="nav-btn active" onclick="showAdminTab('dashboard')">
+                    📊 Дашборд
+                </button>
+                <button class="nav-btn" onclick="showAdminTab('users')">
+                    👥 Пользователи
+                </button>
+                <button class="nav-btn" onclick="showAdminTab('stats')">
+                    📈 Статистика
+                </button>
+                <button class="nav-btn" onclick="showAdminTab('settings')">
+                    ⚙️ Настройки
+                </button>
+                <button class="nav-btn" onclick="showAdminTab('logs')">
+                    📜 Логи
+                </button>
+            </div>
+
+            <!-- Контент -->
+            <div class="admin-content">
+                
+                <!-- Дашборд -->
+                <div id="tab-dashboard" class="admin-tab active">
+                    <h2>📊 Общая статистика</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Всего игроков</div>
+                                <div class="stat-value" id="total-users">0</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">🟢</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Онлайн сейчас</div>
+                                <div class="stat-value" id="online-users">0</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">🎮</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Всего игр</div>
+                                <div class="stat-value" id="total-games">0</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Макс. рекорд</div>
+                                <div class="stat-value" id="max-score">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h3>📈 Активность за последние 7 дней</h3>
+                        <canvas id="activity-chart" width="800" height="300"></canvas>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h3>🏆 Топ-10 игроков</h3>
+                        <table class="admin-table" id="top-players-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Игрок</th>
+                                    <th>Рекорд</th>
+                                    <th>Уровень</th>
+                                    <th>Монеты</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-players-body">
+                                <tr>
+                                    <td colspan="5">Загрузка...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Пользователи -->
+                <div id="tab-users" class="admin-tab" style="display: none;">
+                    <h2>👥 Управление пользователями</h2>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="user-search" placeholder="🔍 Поиск по имени или email...">
+                        <button class="btn-primary" onclick="searchUsers()">Найти</button>
+                    </div>
+
+                    <table class="admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>Аватар</th>
+                                <th>Имя</th>
+                                <th>Email</th>
+                                <th>Уровень</th>
+                                <th>Рекорд</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body">
+                            <tr>
+                                <td colspan="7">Загрузка пользователей...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Статистика -->
+                <div id="tab-stats" class="admin-tab" style="display: none;">
+                    <h2>📈 Детальная статистика</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card-large">
+                            <h3>📊 Статистика игр</h3>
+                            <div class="stat-details">
+                                <p>Всего игр сыграно: <strong id="games-total">0</strong></p>
+                                <p>Среднее время игры: <strong id="avg-playtime">0 мин</strong></p>
+                                <p>Средний счёт: <strong id="avg-score">0</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card-large">
+                            <h3>💰 Экономика</h3>
+                            <div class="stat-details">
+                                <p>Всего монет в игре: <strong id="total-coins">0</strong></p>
+                                <p>Средний баланс: <strong id="avg-coins">0</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>📊 График регистраций</h3>
+                        <canvas id="registrations-chart" width="800" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Настройки -->
+                <div id="tab-settings" class="admin-tab" style="display: none;">
+                    <h2>⚙️ Настройки игры</h2>
+                    
+                    <div class="settings-section">
+                        <h3>🎮 Игровые параметры</h3>
+                        
+                        <div class="setting-item">
+                            <label>Базовая награда за игру (монеты):</label>
+                            <input type="number" id="setting-base-reward" value="10">
+                        </div>
+
+                        <div class="setting-item">
+                            <label>Опыт за победу:</label>
+                            <input type="number" id="setting-win-exp" value="50">
+                        </div>
+
+                        <div class="setting-item">
+                            <label>Множитель монет (x):</label>
+                            <input type="number" id="setting-coin-multiplier" value="1" step="0.1">
+                        </div>
+
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="setting-maintenance">
+                                Режим обслуживания (блокирует вход для обычных игроков)
+                            </label>
+                        </div>
+
+                        <button class="btn-primary btn-large" onclick="saveSettings()">
+                            💾 Сохранить настройки
+                        </button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🗑️ Опасная зона</h3>
+                        
+                        <button class="btn-danger" onclick="clearAllGames()">
+                            🗑️ Очистить историю всех игр
+                        </button>
+                        
+                        <button class="btn-danger" onclick="resetAllStats()">
+                            ⚠️ Сбросить статистику всех игроков
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Логи -->
+                <div id="tab-logs" class="admin-tab" style="display: none;">
+                    <h2>📜 Системные логи</h2>
+                    
+                    <div class="logs-controls">
+                        <button class="btn-secondary" onclick="refreshLogs()">🔄 Обновить</button>
+                        <button class="btn-secondary" onclick="clearLogs()">🗑️ Очистить</button>
+                        <button class="btn-secondary" onclick="exportLogs()">📥 Экспорт</button>
+                    </div>
+
+                    <div class="logs-container" id="logs-container">
+                        <div class="log-entry log-info">
+                            <span class="log-time">12:00:00</span>
+                            <span class="log-message">Админ-панель загружена</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Страница отказа в доступе -->
+        <div id="access-denied" style="display: none;">
+            <div class="access-denied-container">
+                <div class="access-denied-icon">🚫</div>
+                <h1>Доступ запрещён</h1>
+                <p>У вас нет прав для доступа к админ-панели.</p>
+                <p>Только <strong>tolikpro128</strong> имеет доступ к этой странице.</p>
+                <button class="btn-primary" onclick="window.location.href='../pages/game.html'">
+                    Вернуться в игру
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- Наши скрипты -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/database.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin-check.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
