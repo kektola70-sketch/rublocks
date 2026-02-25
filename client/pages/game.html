@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RuBlocks - Русский Roblox с реальной авторизацией">
-    <meta name="author" content="tolikpro128">
     <title>RuBlocks - Игра</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Дополнительные стили для игровой страницы */
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
+        }
+        
+        #current-score,
+        #coins,
+        #level {
+            transition: transform 0.2s;
         }
     </style>
 </head>
@@ -21,21 +24,24 @@
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Загрузка игры...</div>
+        <p style="color: #999; margin-top: 20px; font-size: 14px;">
+            Подключение к Firebase...
+        </p>
     </div>
 
     <!-- Главный контейнер игры -->
-    <div class="game-container" style="display: none;" id="game-main">
+    <div class="game-container" id="game-main" style="display: none;">
         <!-- Шапка с информацией об игроке -->
         <div class="game-header">
             <div class="user-info">
-                <img id="user-avatar" class="user-avatar" src="" alt="Avatar" loading="lazy">
+                <img id="user-avatar" class="user-avatar" src="https://via.placeholder.com/45" alt="Avatar">
                 <span>👤 <strong id="username">Загрузка...</strong></span>
                 <span>⭐ Ур. <strong id="level">1</strong></span>
                 <span>🏆 Рекорд: <strong id="high-score">0</strong></span>
                 <span>💰 Монеты: <strong id="coins">0</strong></span>
                 <span>📊 Счёт: <strong id="current-score">0</strong></span>
             </div>
-            <div class="flex gap-10">
+            <div style="display: flex; gap: 10px;">
                 <button class="btn-logout" onclick="handleLogout()">Выход</button>
             </div>
         </div>
@@ -45,31 +51,7 @@
 
         <!-- Информационное сообщение -->
         <div id="game-info">
-            <p>🎮 Нажмите <strong>ПРОБЕЛ</strong> чтобы добавить очки (демо-режим)</p>
-        </div>
-    </div>
-
-    <!-- Модальное окно (пример) -->
-    <div class="modal" id="pause-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>⏸️ Пауза</h2>
-                <button class="modal-close" onclick="closePauseModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <p>Игра приостановлена</p>
-                <div class="card">
-                    <div class="card-header">Ваша статистика:</div>
-                    <div class="card-body">
-                        <p>Текущий счёт: <strong id="modal-score">0</strong></p>
-                        <p>Время игры: <strong id="modal-time">0:00</strong></p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closePauseModal()">Продолжить</button>
-                <button class="btn-primary" onclick="restartGame()">Начать заново</button>
-            </div>
+            <p>🎮 Нажмите <strong>ПРОБЕЛ</strong> или <strong>КЛИКНИТЕ</strong> чтобы добавить очки</p>
         </div>
     </div>
 
@@ -78,7 +60,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <!-- Наши скрипты -->
+    <!-- Наши скрипты В ПРАВИЛЬНОМ ПОРЯДКЕ -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/database.js"></script>
     <script src="../js/auth.js"></script>
@@ -88,33 +70,21 @@
     <!-- Дополнительные функции -->
     <script>
         // ========================================
-        // Проверка прав админа и показ кнопки
-        // ========================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user && authSystem.getCurrentUser()) {
-                const currentUser = authSystem.getCurrentUser();
-                
-                // Если пользователь админ - показываем кнопку админ-панели
-                if (adminSystem.isAdmin(currentUser)) {
-                    adminSystem.showAdminButton();
-                    console.log('🔑 Права администратора активированы');
-                }
-            }
-        });
-
-        // ========================================
         // Обработчик выхода
         // ========================================
         async function handleLogout() {
             if (confirm('Вы уверены, что хотите выйти? Ваш прогресс будет сохранён.')) {
                 try {
+                    console.log('💾 Сохранение прогресса...');
+                    
                     // Сохраняем игру перед выходом
                     if (window.game && typeof window.game.saveGameData === 'function') {
                         await window.game.saveGameData();
                     }
                     
-                    // Выходим
+                    console.log('👋 Выход...');
                     await authSystem.logout();
+                    
                 } catch (error) {
                     console.error('❌ Ошибка выхода:', error);
                     alert('Произошла ошибка при выходе');
@@ -123,217 +93,57 @@
         }
 
         // ========================================
-        // Модальное окно паузы
+        // Проверка прав админа
         // ========================================
-        function showPauseModal() {
-            const modal = document.getElementById('pause-modal');
-            modal.classList.add('show');
-            
-            // Обновляем статистику в модалке
-            if (window.game) {
-                document.getElementById('modal-score').textContent = window.game.score || 0;
+        auth.onAuthStateChanged(async (user) => {
+            if (user && authSystem.getCurrentUser()) {
+                const currentUser = authSystem.getCurrentUser();
                 
-                const playTime = Math.floor((Date.now() - window.game.startTime) / 1000);
-                const minutes = Math.floor(playTime / 60);
-                const seconds = playTime % 60;
-                document.getElementById('modal-time').textContent = 
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-
-        function closePauseModal() {
-            const modal = document.getElementById('pause-modal');
-            modal.classList.remove('show');
-        }
-
-        function restartGame() {
-            closePauseModal();
-            if (window.game && typeof window.game.restart === 'function') {
-                window.game.restart();
-            }
-        }
-
-        // ========================================
-        // Горячие клавиши
-        // ========================================
-        document.addEventListener('keydown', (e) => {
-            // ESC - пауза/меню
-            if (e.key === 'Escape') {
-                showPauseModal();
-            }
-            
-            // F11 - полный экран
-            if (e.key === 'F11') {
-                e.preventDefault();
-                toggleFullscreen();
+                // Если пользователь админ - показываем кнопку админ-панели
+                if (adminSystem && adminSystem.isAdmin(currentUser)) {
+                    adminSystem.showAdminButton();
+                    console.log('🔑 Права администратора активированы');
+                }
             }
         });
 
         // ========================================
-        // Полноэкранный режим
-        // ========================================
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error('Ошибка перехода в полный экран:', err);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // ========================================
-        // Уведомления
-        // ========================================
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <strong>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</strong>
-                ${message}
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Автоматически удаляем через 3 секунды
-            setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // ========================================
-        // Обработчик ухода со страницы
+        // Автосохранение при закрытии
         // ========================================
         window.addEventListener('beforeunload', (e) => {
-            // Автоматически сохраняем прогресс
             if (window.game && typeof window.game.saveGameData === 'function') {
                 window.game.saveGameData();
             }
         });
 
         // ========================================
-        // Обработка потери фокуса
-        // ========================================
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                console.log('⏸️ Игра свёрнута, автопауза');
-                // Можно здесь поставить игру на паузу
-            } else {
-                console.log('▶️ Игра возобновлена');
-            }
-        });
-
-        // ========================================
-        // Проверка производительности
-        // ========================================
-        function checkPerformance() {
-            if (performance && performance.memory) {
-                const used = performance.memory.usedJSHeapSize / 1048576;
-                const total = performance.memory.totalJSHeapSize / 1048576;
-                
-                console.log(`💾 Память: ${used.toFixed(2)} MB / ${total.toFixed(2)} MB`);
-                
-                // Предупреждение если памяти мало
-                if (used / total > 0.9) {
-                    console.warn('⚠️ Мало памяти! Возможны лаги.');
-                }
-            }
-        }
-
-        // Проверяем производительность каждые 30 секунд
-        setInterval(checkPerformance, 30000);
-
-        // ========================================
-        // Debug панель (только в development)
-        // ========================================
-        if (window.location.hostname === 'localhost' || 
-            window.location.hostname === '127.0.0.1') {
-            
-            console.log(`
-╔════════════════════════════════════════╗
-║        🎮 RuBlocks Debug Mode         ║
-╠════════════════════════════════════════╣
-║                                        ║
-║  Горячие клавиши:                      ║
-║  ESC    - Пауза                        ║
-║  F11    - Полный экран                 ║
-║  SPACE  - Добавить очки (демо)         ║
-║                                        ║
-║  Функции в консоли:                    ║
-║  showNotification(msg, type)           ║
-║  checkPerformance()                    ║
-║  toggleFullscreen()                    ║
-║                                        ║
-╚════════════════════════════════════════╝
-            `);
-        }
-
-        // ========================================
-        // Анимация загрузки
-        // ========================================
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                const gameMain = document.getElementById('game-main');
-                
-                if (loadingScreen) {
-                    loadingScreen.style.animation = 'fadeOut 0.5s';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        if (gameMain) {
-                            gameMain.style.display = 'flex';
-                        }
-                    }, 500);
-                }
-            }, 1000);
-        });
-
-        // ========================================
-        // PWA Support (Progressive Web App)
-        // ========================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // Здесь можно зарегистрировать Service Worker
-                // для офлайн режима (опционально)
-                console.log('🌐 PWA готов к использованию');
-            });
-        }
-
-        // ========================================
         // Обработка ошибок
         // ========================================
         window.addEventListener('error', (e) => {
-            console.error('💥 Глобальная ошибка:', e.error);
-            
-            // В продакшене можно отправлять на сервер
-            if (window.location.hostname !== 'localhost') {
-                // Отправка ошибки на сервер логирования
-            }
+            console.error('💥 Ошибка:', e.error);
         });
 
         // ========================================
-        // FPS Counter (для отладки)
+        // Горячие клавиши
         // ========================================
-        let lastTime = performance.now();
-        let fps = 0;
-        
-        function updateFPS() {
-            const now = performance.now();
-            fps = Math.round(1000 / (now - lastTime));
-            lastTime = now;
+        document.addEventListener('keydown', (e) => {
+            // ESC - меню
+            if (e.key === 'Escape') {
+                console.log('⏸️ ESC нажат');
+            }
             
-            // Можно отображать FPS в debug режиме
-            // console.log('FPS:', fps);
-            
-            requestAnimationFrame(updateFPS);
-        }
-        
-        if (window.location.hostname === 'localhost') {
-            updateFPS();
-        }
+            // R - перезапуск
+            if (e.key === 'r' || e.key === 'R') {
+                if (window.game && typeof window.game.restart === 'function') {
+                    if (confirm('Начать игру заново?')) {
+                        window.game.restart();
+                    }
+                }
+            }
+        });
 
-        console.log('✅ game.html загружен успешно');
+        console.log('✅ game.html загружен');
+        console.log('⌨️ Горячие клавиши: ПРОБЕЛ - очки, R - перезапуск, ESC - меню');
     </script>
 </body>
 </html>
