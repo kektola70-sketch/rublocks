@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="RuBlocks - Русский Roblox. Играй, создавай, общайся!">
     <title>RuBlocks - Лобби</title>
     <style>
         * {
@@ -55,6 +57,13 @@
             margin-top: 20px;
             font-size: 20px;
             color: #667eea;
+            font-weight: 600;
+        }
+
+        .loading-subtext {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
         }
 
         /* ==========================================
@@ -62,7 +71,7 @@
            ========================================== */
         .lobby-header {
             background: rgba(0, 0, 0, 0.5);
-            padding: 15px 20px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -71,12 +80,16 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .user-panel {
@@ -90,6 +103,14 @@
             height: 45px;
             border-radius: 50%;
             border: 3px solid #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
         }
 
         .user-info-header {
@@ -118,12 +139,19 @@
             align-items: center;
             gap: 5px;
             background: rgba(255,255,255,0.1);
-            padding: 5px 12px;
+            padding: 6px 15px;
             border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .balance-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
         }
 
         .btn-logout {
-            padding: 8px 20px;
+            padding: 10px 25px;
             background: #e74c3c;
             color: white;
             border: none;
@@ -131,6 +159,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            font-size: 14px;
         }
 
         .btn-logout:hover {
@@ -146,19 +175,19 @@
             grid-template-columns: 1fr;
             gap: 20px;
             padding: 20px;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         @media (min-width: 768px) {
             .lobby-container {
-                grid-template-columns: 1fr 300px;
+                grid-template-columns: 1fr 350px;
             }
         }
 
         @media (min-width: 1200px) {
             .lobby-container {
-                grid-template-columns: 300px 1fr 300px;
+                grid-template-columns: 320px 1fr 350px;
             }
         }
 
@@ -175,7 +204,6 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
             border-color: rgba(102, 126, 234, 0.5);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
@@ -203,47 +231,55 @@
         }
 
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 4px solid #667eea;
+            border: 5px solid #667eea;
             margin-bottom: 15px;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
         .profile-name {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
         .profile-email {
-            font-size: 14px;
+            font-size: 13px;
             color: rgba(255,255,255,0.6);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .stat-box {
             background: rgba(102, 126, 234, 0.2);
             padding: 15px 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             text-align: center;
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .stat-box:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px);
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #ffd700;
         }
 
         .stat-label {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255,255,255,0.7);
             margin-top: 5px;
         }
@@ -253,13 +289,13 @@
            ========================================== */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
 
         .game-item {
             background: rgba(255,255,255,0.05);
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
@@ -268,76 +304,95 @@
 
         .game-item:hover {
             border-color: #667eea;
-            transform: scale(1.03);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
 
         .game-image {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .game-info {
-            padding: 12px;
+            padding: 15px;
         }
 
         .game-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .game-players {
-            font-size: 12px;
+            font-size: 13px;
             color: #4ade80;
             display: flex;
             align-items: center;
             gap: 5px;
+            margin-bottom: 5px;
         }
 
         .game-rating {
-            font-size: 12px;
+            font-size: 13px;
             color: #ffd700;
-            margin-top: 5px;
         }
 
         .btn-play {
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 12px;
+            margin-top: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 15px;
         }
 
-        .btn-play:hover {
+        .btn-play:hover:not(:disabled) {
             transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* ==========================================
            ОНЛАЙН ИГРОКИ
            ========================================== */
         .players-list {
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
         }
 
         .player-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
+            gap: 12px;
+            padding: 12px;
             border-radius: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             background: rgba(255,255,255,0.05);
             transition: all 0.3s;
             cursor: pointer;
@@ -345,23 +400,29 @@
 
         .player-item:hover {
             background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
         }
 
-        .player-avatar {
-            width: 40px;
-            height: 40px;
+        .player-avatar-small {
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             border: 2px solid #4ade80;
         }
 
-        .player-name {
+        .player-info {
             flex: 1;
+        }
+
+        .player-name {
             font-weight: 600;
+            font-size: 15px;
         }
 
         .player-status {
-            font-size: 12px;
+            font-size: 11px;
             color: #4ade80;
+            margin-top: 3px;
         }
 
         .online-dot {
@@ -373,8 +434,8 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
         }
 
         /* ==========================================
@@ -383,40 +444,42 @@
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 350px;
+            height: 400px;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            margin-bottom: 12px;
         }
 
         .chat-message {
-            margin-bottom: 10px;
-            padding: 8px 12px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
             background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
         }
 
         .chat-message-user {
             font-weight: bold;
             color: #667eea;
-            font-size: 12px;
+            font-size: 13px;
+            margin-bottom: 4px;
         }
 
         .chat-message-text {
             font-size: 14px;
-            margin-top: 3px;
+            line-height: 1.4;
         }
 
         .chat-message-time {
             font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 3px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 5px;
         }
 
         .chat-input-container {
@@ -426,12 +489,13 @@
 
         .chat-input {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
             color: white;
             font-size: 14px;
+            transition: all 0.3s;
         }
 
         .chat-input::placeholder {
@@ -441,10 +505,11 @@
         .chat-input:focus {
             outline: none;
             border-color: #667eea;
+            background: rgba(255,255,255,0.15);
         }
 
         .chat-send {
-            padding: 12px 20px;
+            padding: 14px 25px;
             background: #667eea;
             border: none;
             border-radius: 10px;
@@ -456,6 +521,7 @@
 
         .chat-send:hover {
             background: #764ba2;
+            transform: scale(1.05);
         }
 
         /* ==========================================
@@ -464,13 +530,13 @@
         .shop-items {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
         .shop-item {
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 18px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -479,26 +545,150 @@
 
         .shop-item:hover {
             border-color: #ffd700;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
         }
 
         .shop-item-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 40px;
+            margin-bottom: 12px;
         }
 
         .shop-item-name {
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .shop-item-price {
-            font-size: 12px;
+            font-size: 13px;
             color: #ffd700;
+            font-weight: 600;
         }
 
         /* ==========================================
-           НАВИГАЦИЯ (МОБИЛЬНАЯ)
+           МОДАЛЬНЫЕ ОКНА
+           ========================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 550px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: modalIn 0.4s;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.1);
+            transform: rotate(90deg);
+        }
+
+        /* ==========================================
+           УВЕДОМЛЕНИЯ
+           ========================================== */
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 18px 25px;
+            z-index: 1000;
+            animation: slideIn 0.4s;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .notification.success {
+            border-left: 5px solid #4ade80;
+        }
+
+        .notification.error {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .notification.info {
+            border-left: 5px solid #667eea;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ==========================================
+           МОБИЛЬНАЯ НАВИГАЦИЯ
            ========================================== */
         .mobile-nav {
             display: none;
@@ -506,9 +696,9 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(10px);
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
             z-index: 100;
         }
@@ -525,14 +715,17 @@
             gap: 5px;
             color: rgba(255,255,255,0.6);
             text-decoration: none;
-            font-size: 10px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.3s;
+            padding: 8px;
+            border-radius: 8px;
         }
 
         .nav-item.active,
         .nav-item:hover {
             color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
         }
 
         .nav-icon {
@@ -545,12 +738,13 @@
             }
 
             .lobby-container {
-                padding-bottom: 80px;
+                padding-bottom: 90px;
             }
 
             .lobby-header {
                 flex-wrap: wrap;
-                gap: 10px;
+                gap: 12px;
+                padding: 12px 15px;
             }
 
             .user-balance {
@@ -560,104 +754,12 @@
             }
 
             .games-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
-        }
 
-        /* ==========================================
-           МОДАЛЬНЫЕ ОКНА
-           ========================================== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1a1a2e;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: modalIn 0.3s;
-        }
-
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        /* ==========================================
-           УВЕДОМЛЕНИЯ
-           ========================================== */
-        .notification {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: #1a1a2e;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 15px 20px;
-            z-index: 1000;
-            animation: slideIn 0.3s;
-            max-width: 300px;
-        }
-
-        .notification.success {
-            border-left: 4px solid #4ade80;
-        }
-
-        .notification.error {
-            border-left: 4px solid #e74c3c;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
+            .left-column,
+            .right-column {
+                display: none;
             }
         }
 
@@ -665,7 +767,7 @@
            SCROLLBAR
            ========================================== */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
 
         ::-webkit-scrollbar-track {
@@ -677,6 +779,33 @@
             background: #667eea;
             border-radius: 10px;
         }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        /* ==========================================
+           ДОПОЛНИТЕЛЬНЫЕ ЭЛЕМЕНТЫ
+           ========================================== */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        }
+
+        .badge-hot {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .badge-featured {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
     </style>
 </head>
 <body>
@@ -684,6 +813,7 @@
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Загрузка лобби...</div>
+        <div class="loading-subtext">Подключение к серверу</div>
     </div>
 
     <!-- Главный контент -->
@@ -694,18 +824,18 @@
             <div class="logo">🎮 RuBlocks</div>
             
             <div class="user-balance">
-                <div class="balance-item">
+                <div class="balance-item" title="Монеты">
                     <span>💰</span>
-                    <span id="user-coins">0</span>
+                    <strong id="user-coins">0</strong>
                 </div>
-                <div class="balance-item">
+                <div class="balance-item" title="Гемы">
                     <span>💎</span>
-                    <span id="user-gems">0</span>
+                    <strong id="user-gems">0</strong>
                 </div>
             </div>
 
             <div class="user-panel">
-                <img id="header-avatar" class="user-avatar" src="" alt="Avatar">
+                <img id="header-avatar" class="user-avatar" src="" alt="Avatar" title="Ваш профиль">
                 <div class="user-info-header">
                     <span class="user-name" id="header-username">Загрузка...</span>
                     <span class="user-level">⭐ Уровень <span id="header-level">1</span></span>
@@ -717,7 +847,7 @@
         <!-- Контент лобби -->
         <div class="lobby-container">
             
-            <!-- Левая колонка - Профиль -->
+            <!-- Левая колонка - Профиль (Desktop) -->
             <div class="left-column">
                 <!-- Профиль -->
                 <div class="card profile-card">
@@ -779,113 +909,134 @@
             <div class="center-column">
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">🎮 Игры</span>
+                        <span class="card-title">🎮 Популярные игры</span>
                         <span style="color: rgba(255,255,255,0.5); font-size: 14px;">Выберите игру</span>
                     </div>
                     <div class="games-grid">
-                        <!-- Игра 1 -->
+                        
+                        <!-- Игра 1: Обби -->
                         <div class="game-item" onclick="joinGame('obby')">
-                            <div class="game-image">🏃</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                🏃
+                                <span class="badge badge-hot">HOT</span>
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">Обби</div>
                                 <div class="game-players">🟢 1,234 играют</div>
-                                <div class="game-rating">⭐ 4.8</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐⭐ 4.8</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 2 -->
+                        <!-- Игра 2: Тайкун -->
                         <div class="game-item" onclick="joinGame('tycoon')">
-                            <div class="game-image">🏭</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                🏭
+                                <span class="badge badge-featured">НОВОЕ</span>
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">Тайкун</div>
                                 <div class="game-players">🟢 856 играют</div>
-                                <div class="game-rating">⭐ 4.5</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐☆ 4.5</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 3 -->
+                        <!-- Игра 3: Симулятор -->
                         <div class="game-item" onclick="joinGame('simulator')">
-                            <div class="game-image">💪</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                💪
+                            </div>
                             <div class="game-info">
-                                <div class="game-title">Симулятор</div>
+                                <div class="game-title">Симулятор силы</div>
                                 <div class="game-players">🟢 2,456 играют</div>
-                                <div class="game-rating">⭐ 4.9</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 4 -->
+                        <!-- Игра 4: PvP -->
                         <div class="game-item" onclick="joinGame('pvp')">
-                            <div class="game-image">⚔️</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                                ⚔️
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">PvP Арена</div>
                                 <div class="game-players">🟢 567 играют</div>
-                                <div class="game-rating">⭐ 4.6</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐☆ 4.6</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 5 -->
+                        <!-- Игра 5: Ролевая -->
                         <div class="game-item" onclick="joinGame('roleplay')">
-                            <div class="game-image">🏠</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                                🏠
+                                <span class="badge badge-new">ТОП</span>
+                            </div>
                             <div class="game-info">
-                                <div class="game-title">Ролевая</div>
+                                <div class="game-title">Ролевая игра</div>
                                 <div class="game-players">🟢 3,210 играют</div>
-                                <div class="game-rating">⭐ 4.7</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐☆ 4.7</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 6 -->
+                        <!-- Игра 6: Хоррор -->
                         <div class="game-item" onclick="joinGame('horror')">
-                            <div class="game-image">👻</div>
+                            <div class="game-image" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
+                                👻
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">Хоррор</div>
                                 <div class="game-players">🟢 432 играют</div>
-                                <div class="game-rating">⭐ 4.4</div>
-                                <button class="btn-play">Играть</button>
+                                <div class="game-rating">⭐⭐⭐⭐☆ 4.4</div>
+                                <button class="btn-play">▶️ Играть</button>
                             </div>
                         </div>
 
-                        <!-- Игра 7 - В разработке -->
-                        <div class="game-item" style="opacity: 0.5;">
-                            <div class="game-image">🔒</div>
+                        <!-- Игра 7: Скоро -->
+                        <div class="game-item" style="opacity: 0.6; cursor: not-allowed;">
+                            <div class="game-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                🔒
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">Скоро...</div>
                                 <div class="game-players">В разработке</div>
-                                <div class="game-rating">⭐ ???</div>
-                                <button class="btn-play" disabled style="opacity: 0.5;">Скоро</button>
+                                <div class="game-rating">⭐⭐⭐⭐⭐ ???</div>
+                                <button class="btn-play" disabled>Скоро</button>
                             </div>
                         </div>
 
-                        <!-- Игра 8 - В разработке -->
-                        <div class="game-item" style="opacity: 0.5;">
-                            <div class="game-image">🔒</div>
+                        <!-- Игра 8: Скоро -->
+                        <div class="game-item" style="opacity: 0.6; cursor: not-allowed;">
+                            <div class="game-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                🔒
+                            </div>
                             <div class="game-info">
                                 <div class="game-title">Скоро...</div>
                                 <div class="game-players">В разработке</div>
-                                <div class="game-rating">⭐ ???</div>
-                                <button class="btn-play" disabled style="opacity: 0.5;">Скоро</button>
+                                <div class="game-rating">⭐⭐⭐⭐⭐ ???</div>
+                                <button class="btn-play" disabled>Скоро</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
 
-            <!-- Правая колонка - Игроки и чат -->
+            <!-- Правая колонка - Игроки и чат (Desktop) -->
             <div class="right-column">
                 <!-- Онлайн игроки -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">👥 Онлайн</span>
-                        <span id="online-count" style="color: #4ade80;">0</span>
+                        <span id="online-count" style="color: #4ade80; font-weight: bold;">0</span>
                     </div>
                     <div class="players-list" id="players-list">
-                        <div class="player-item">
-                            <div class="loading-spinner" style="width: 20px; height: 20px;"></div>
-                            <span>Загрузка...</span>
+                        <div style="text-align: center; padding: 30px; color: rgba(255,255,255,0.5);">
+                            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 0 auto 15px;"></div>
+                            <p>Загрузка игроков...</p>
                         </div>
                     </div>
                 </div>
@@ -899,12 +1050,17 @@
                         <div class="chat-messages" id="chat-messages">
                             <div class="chat-message">
                                 <div class="chat-message-user">🤖 Система</div>
-                                <div class="chat-message-text">Добро пожаловать в RuBlocks!</div>
+                                <div class="chat-message-text">Добро пожаловать в RuBlocks! 🎮</div>
                                 <div class="chat-message-time">Сейчас</div>
                             </div>
                         </div>
                         <div class="chat-input-container">
-                            <input type="text" class="chat-input" id="chat-input" placeholder="Написать сообщение..." maxlength="200">
+                            <input 
+                                type="text" 
+                                class="chat-input" 
+                                id="chat-input" 
+                                placeholder="Написать сообщение..." 
+                                maxlength="200">
                             <button class="chat-send" onclick="sendMessage()">➤</button>
                         </div>
                     </div>
@@ -916,23 +1072,23 @@
         <!-- Мобильная навигация -->
         <div class="mobile-nav">
             <div class="nav-items">
-                <div class="nav-item active" onclick="showSection('games')">
+                <div class="nav-item active" data-section="games">
                     <span class="nav-icon">🎮</span>
                     <span>Игры</span>
                 </div>
-                <div class="nav-item" onclick="showSection('profile')">
+                <div class="nav-item" data-section="profile">
                     <span class="nav-icon">👤</span>
                     <span>Профиль</span>
                 </div>
-                <div class="nav-item" onclick="showSection('shop')">
+                <div class="nav-item" data-section="shop">
                     <span class="nav-icon">🛒</span>
                     <span>Магазин</span>
                 </div>
-                <div class="nav-item" onclick="showSection('chat')">
+                <div class="nav-item" data-section="chat">
                     <span class="nav-icon">💬</span>
                     <span>Чат</span>
                 </div>
-                <div class="nav-item" onclick="showSection('friends')">
+                <div class="nav-item" data-section="friends">
                     <span class="nav-icon">👥</span>
                     <span>Друзья</span>
                 </div>
@@ -944,17 +1100,17 @@
     <div class="modal" id="game-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title" id="modal-game-title">Загрузка...</span>
+                <span class="modal-title" id="modal-game-title">Загрузка игры...</span>
                 <button class="modal-close" onclick="closeGameModal()">×</button>
             </div>
-            <div style="text-align: center; padding: 20px;">
-                <div class="loading-spinner"></div>
-                <p style="margin-top: 20px;">Подключение к серверу...</p>
-                <p style="margin-top: 10px; color: rgba(255,255,255,0.6); font-size: 14px;">
-                    Игра в разработке
+            <div style="text-align: center; padding: 30px;">
+                <div class="loading-spinner" style="margin: 0 auto 20px;"></div>
+                <p style="font-size: 18px; margin-bottom: 15px;">Подключение к серверу...</p>
+                <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 30px;">
+                    Игра находится в разработке
                 </p>
-                <button class="btn-play" style="margin-top: 20px;" onclick="closeGameModal()">
-                    Назад в лобби
+                <button class="btn-play" onclick="closeGameModal()" style="max-width: 200px; margin: 0 auto;">
+                    ← Назад в лобби
                 </button>
             </div>
         </div>
@@ -982,17 +1138,17 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        console.log('🔥 Firebase инициализирован');
+
         // ==========================================
         // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
         // ==========================================
         let currentUser = null;
         let userProfile = null;
+        let chatUnsubscribe = null;
 
-        // ==========================================
-        // ОПРЕДЕЛЕНИЕ УСТРОЙСТВА
-        // ==========================================
+        // Определение устройства
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-
         console.log('📱 Устройство:', isMobile ? 'Мобильное' : 'ПК');
 
         // ==========================================
@@ -1005,7 +1161,7 @@
                 await loadUserProfile();
                 initLobby();
             } else {
-                console.log('❌ Не авторизован');
+                console.log('❌ Не авторизован, перенаправление...');
                 window.location.href = '../index.html';
             }
         });
@@ -1016,8 +1172,10 @@
                 
                 if (doc.exists) {
                     userProfile = doc.data();
+                    console.log('✅ Профиль загружен:', userProfile.username);
                 } else {
-                    // Создаём профиль если нет
+                    console.warn('⚠️ Профиль не найден, создание...');
+                    // Создаём профиль
                     userProfile = {
                         username: currentUser.displayName || currentUser.email.split('@')[0],
                         email: currentUser.email,
@@ -1035,8 +1193,6 @@
                     
                     await db.collection('users').doc(currentUser.uid).set(userProfile);
                 }
-
-                console.log('✅ Профиль загружен:', userProfile.username);
             } catch (error) {
                 console.error('❌ Ошибка загрузки профиля:', error);
             }
@@ -1050,21 +1206,23 @@
             // Обновляем UI
             updateUI();
 
-            // Загружаем онлайн игроков
+            // Загружаем данные
             loadOnlinePlayers();
+            listenToChat();
 
-            // Обновляем статус онлайн
+            // Устанавливаем онлайн статус
             setOnlineStatus(true);
 
-            // Слушаем чат
-            listenToChat();
+            // Мобильная навигация
+            setupMobileNav();
 
             console.log('✅ Лобби инициализировано');
         }
 
         function updateUI() {
             const username = userProfile?.username || currentUser.displayName || 'Игрок';
-            const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
+            const avatarUrl = userProfile?.photoURL || currentUser.photoURL || 
+                            `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
             const stats = userProfile?.stats || {};
 
             // Шапка
@@ -1074,18 +1232,21 @@
             document.getElementById('user-coins').textContent = stats.coins || 0;
             document.getElementById('user-gems').textContent = stats.gems || 0;
 
-            // Профиль
-            document.getElementById('profile-name').textContent = username;
-            document.getElementById('profile-email').textContent = currentUser.email;
-            document.getElementById('profile-avatar').src = avatarUrl;
+            // Профиль (если есть)
+            const profileName = document.getElementById('profile-name');
+            if (profileName) {
+                profileName.textContent = username;
+                document.getElementById('profile-email').textContent = currentUser.email;
+                document.getElementById('profile-avatar').src = avatarUrl;
 
-            // Статистика
-            document.getElementById('stat-games').textContent = stats.gamesPlayed || 0;
-            document.getElementById('stat-wins').textContent = stats.wins || 0;
-            document.getElementById('stat-highscore').textContent = stats.highScore || 0;
-            
-            const hours = Math.floor((stats.totalPlayTime || 0) / 3600);
-            document.getElementById('stat-playtime').textContent = hours + 'ч';
+                // Статистика
+                document.getElementById('stat-games').textContent = stats.gamesPlayed || 0;
+                document.getElementById('stat-wins').textContent = stats.wins || 0;
+                document.getElementById('stat-highscore').textContent = stats.highScore || 0;
+                
+                const hours = Math.floor((stats.totalPlayTime || 0) / 3600);
+                document.getElementById('stat-playtime').textContent = hours + 'ч';
+            }
         }
 
         // ==========================================
@@ -1093,39 +1254,73 @@
         // ==========================================
         async function loadOnlinePlayers() {
             try {
-                const snapshot = await db.collection('users')
-                    .where('isOnline', '==', true)
-                    .limit(20)
-                    .get();
+                const snapshot = await db.collection('users').limit(50).get();
 
                 const playersList = document.getElementById('players-list');
                 playersList.innerHTML = '';
 
-                let count = 0;
+                let onlineCount = 0;
+                const onlinePlayers = [];
 
                 snapshot.forEach(doc => {
                     const player = doc.data();
-                    count++;
+                    
+                    if (player.isOnline === true) {
+                        onlinePlayers.push({ id: doc.id, ...player });
+                        onlineCount++;
+                    }
+                });
 
+                // Сортируем по времени входа
+                onlinePlayers.sort((a, b) => {
+                    const timeA = a.lastLogin?.toDate ? a.lastLogin.toDate().getTime() : 0;
+                    const timeB = b.lastLogin?.toDate ? b.lastLogin.toDate().getTime() : 0;
+                    return timeB - timeA;
+                });
+
+                // Отображаем
+                onlinePlayers.slice(0, 20).forEach(player => {
                     const playerEl = document.createElement('div');
                     playerEl.className = 'player-item';
+                    
+                    const avatar = player.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.id}`;
+                    
                     playerEl.innerHTML = `
-                        <img class="player-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${doc.id}" alt="">
-                        <span class="player-name">${player.username || 'Игрок'}</span>
+                        <img class="player-avatar-small" src="${avatar}" alt="">
+                        <div class="player-info">
+                            <div class="player-name">${player.username || 'Игрок'}</div>
+                            <div class="player-status">🟢 В сети</div>
+                        </div>
                         <div class="online-dot"></div>
                     `;
-                    playerEl.onclick = () => viewPlayer(doc.id, player);
+                    
+                    playerEl.onclick = () => viewPlayer(player.id, player);
                     playersList.appendChild(playerEl);
                 });
 
-                document.getElementById('online-count').textContent = count;
+                document.getElementById('online-count').textContent = onlineCount;
 
-                if (count === 0) {
-                    playersList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">Никого нет онлайн</div>';
+                if (onlineCount === 0) {
+                    playersList.innerHTML = `
+                        <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 30px;">
+                            <p style="font-size: 40px; margin-bottom: 10px;">👥</p>
+                            <p>Никого нет онлайн</p>
+                        </div>
+                    `;
                 }
 
             } catch (error) {
                 console.error('❌ Ошибка загрузки игроков:', error);
+                
+                const playersList = document.getElementById('players-list');
+                playersList.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: rgba(255,255,255,0.6);">
+                        <p>⚠️ Ошибка загрузки</p>
+                        <button class="btn-play" onclick="loadOnlinePlayers()" style="margin-top: 15px; max-width: 150px;">
+                            Обновить
+                        </button>
+                    </div>
+                `;
             }
         }
 
@@ -1133,7 +1328,7 @@
             try {
                 await db.collection('users').doc(currentUser.uid).update({
                     isOnline: status,
-                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch (error) {
                 console.error('Ошибка обновления статуса:', error);
@@ -1141,33 +1336,63 @@
         }
 
         function viewPlayer(playerId, player) {
-            showNotification(`👤 ${player.username} - Уровень ${player.stats?.level || 1}`, 'success');
+            const level = player.stats?.level || 1;
+            const highScore = player.stats?.highScore || 0;
+            showNotification(
+                `👤 ${player.username}\n⭐ Уровень ${level}\n🏆 Рекорд: ${highScore}`, 
+                'info'
+            );
         }
 
         // ==========================================
         // ЧАТ
         // ==========================================
         function listenToChat() {
-            db.collection('chat')
+            chatUnsubscribe = db.collection('chat')
                 .orderBy('timestamp', 'desc')
                 .limit(50)
-                .onSnapshot(snapshot => {
-                    const messages = [];
-                    snapshot.forEach(doc => {
-                        messages.push({ id: doc.id, ...doc.data() });
-                    });
+                .onSnapshot(
+                    snapshot => {
+                        const messages = [];
+                        snapshot.forEach(doc => {
+                            messages.push({ id: doc.id, ...doc.data() });
+                        });
 
-                    renderChat(messages.reverse());
-                });
+                        renderChat(messages.reverse());
+                    },
+                    error => {
+                        console.error('❌ Ошибка чата:', error);
+                        
+                        const chatMessages = document.getElementById('chat-messages');
+                        chatMessages.innerHTML = `
+                            <div style="text-align: center; padding: 30px; color: rgba(255,255,255,0.6);">
+                                <p>⚠️ Чат недоступен</p>
+                                <p style="font-size: 12px; margin-top: 10px;">
+                                    Настройка базы данных...
+                                </p>
+                            </div>
+                        `;
+                    }
+                );
         }
 
         function renderChat(messages) {
             const chatMessages = document.getElementById('chat-messages');
             
+            if (messages.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="chat-message">
+                        <div class="chat-message-user">🤖 Система</div>
+                        <div class="chat-message-text">Чат пуст. Напишите первое сообщение!</div>
+                    </div>
+                `;
+                return;
+            }
+            
             chatMessages.innerHTML = messages.map(msg => `
                 <div class="chat-message">
-                    <div class="chat-message-user">${msg.username || 'Аноним'}</div>
-                    <div class="chat-message-text">${escapeHtml(msg.text)}</div>
+                    <div class="chat-message-user">${escapeHtml(msg.username || 'Аноним')}</div>
+                    <div class="chat-message-text">${escapeHtml(msg.text || '')}</div>
                     <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
                 </div>
             `).join('');
@@ -1181,10 +1406,15 @@
 
             if (!text) return;
 
+            if (text.length > 200) {
+                showNotification('Сообщение слишком длинное (макс. 200 символов)', 'error');
+                return;
+            }
+
             try {
                 await db.collection('chat').add({
                     userId: currentUser.uid,
-                    username: userProfile?.username || 'Игрок',
+                    username: userProfile?.username || currentUser.displayName || 'Игрок',
                     text: text,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -1196,7 +1426,7 @@
             }
         }
 
-        // Отправка по Enter
+        // Enter для отправки
         document.getElementById('chat-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
@@ -1222,19 +1452,21 @@
             const gameNames = {
                 'obby': '🏃 Обби',
                 'tycoon': '🏭 Тайкун',
-                'simulator': '💪 Симулятор',
+                'simulator': '💪 Симулятор силы',
                 'pvp': '⚔️ PvP Арена',
-                'roleplay': '🏠 Ролевая',
+                'roleplay': '🏠 Ролевая игра',
                 'horror': '👻 Хоррор'
             };
 
             document.getElementById('modal-game-title').textContent = gameNames[gameId] || 'Игра';
             document.getElementById('game-modal').classList.add('show');
 
-            console.log('🎮 Запуск игры:', gameId);
+            console.log('🎮 Попытка запуска игры:', gameId);
 
             // Здесь будет переход на страницу игры
-            // window.location.href = `games/${gameId}.html`;
+            // setTimeout(() => {
+            //     window.location.href = `games/${gameId}.html`;
+            // }, 2000);
         }
 
         function closeGameModal() {
@@ -1246,10 +1478,10 @@
         // ==========================================
         function buyItem(itemId) {
             const items = {
-                'coins100': { name: '100 монет', price: 10, currency: 'gems' },
-                'skin1': { name: 'Скин #1', price: 500, currency: 'coins' },
-                'boost': { name: 'Буст x2', price: 25, currency: 'gems' },
-                'vip': { name: 'VIP', price: 100, currency: 'gems' }
+                'coins100': { name: '100 монет', price: 10, currency: 'gems', icon: '💰' },
+                'skin1': { name: 'Скин #1', price: 500, currency: 'coins', icon: '👕' },
+                'boost': { name: 'Буст x2', price: 25, currency: 'gems', icon: '⚡' },
+                'vip': { name: 'VIP статус', price: 100, currency: 'gems', icon: '👑' }
             };
 
             const item = items[itemId];
@@ -1258,39 +1490,48 @@
             const balance = userProfile?.stats?.[item.currency] || 0;
 
             if (balance >= item.price) {
-                showNotification(`✅ Вы купили: ${item.name}`, 'success');
-                // Здесь будет списание валюты и выдача предмета
+                showNotification(`✅ Вы купили: ${item.icon} ${item.name}`, 'success');
+                // Здесь будет логика покупки
             } else {
-                showNotification(`❌ Недостаточно ${item.currency === 'gems' ? '💎' : '💰'}`, 'error');
+                const currencyIcon = item.currency === 'gems' ? '💎' : '💰';
+                showNotification(`❌ Недостаточно ${currencyIcon}\nНужно: ${item.price}, есть: ${balance}`, 'error');
             }
         }
 
         // ==========================================
         // МОБИЛЬНАЯ НАВИГАЦИЯ
         // ==========================================
-        function showSection(section) {
+        function setupMobileNav() {
             document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
+                item.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    
+                    // Убираем active со всех
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    
+                    // Добавляем к текущему
+                    this.classList.add('active');
+                    
+                    // Скролл к секции (на мобильных)
+                    if (isMobile) {
+                        scrollToSection(section);
+                    }
+                });
             });
-            event.target.closest('.nav-item').classList.add('active');
+        }
 
-            // Скролл к нужной секции
-            switch(section) {
-                case 'games':
-                    document.querySelector('.center-column').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'profile':
-                    document.querySelector('.profile-card').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'shop':
-                    document.querySelector('.shop-items').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'chat':
-                    document.querySelector('.chat-container').scrollIntoView({ behavior: 'smooth' });
-                    break;
-                case 'friends':
-                    document.querySelector('.players-list').scrollIntoView({ behavior: 'smooth' });
-                    break;
+        function scrollToSection(section) {
+            const scrollTarget = {
+                'games': '.center-column',
+                'profile': '.profile-card',
+                'shop': '.shop-items',
+                'chat': '.chat-container',
+                'friends': '.players-list'
+            };
+
+            const target = document.querySelector(scrollTarget[section]);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -1300,12 +1541,13 @@
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.textContent = message;
+            notification.innerHTML = message.replace(/\n/g, '<br>');
             document.body.appendChild(notification);
 
             setTimeout(() => {
-                notification.remove();
-            }, 3000);
+                notification.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
         }
 
         // ==========================================
@@ -1313,8 +1555,18 @@
         // ==========================================
         async function handleLogout() {
             if (confirm('Вы уверены, что хотите выйти?')) {
-                await setOnlineStatus(false);
-                await auth.signOut();
+                try {
+                    await setOnlineStatus(false);
+                    
+                    if (chatUnsubscribe) {
+                        chatUnsubscribe();
+                    }
+                    
+                    await auth.signOut();
+                    console.log('✅ Выход выполнен');
+                } catch (error) {
+                    console.error('❌ Ошибка выхода:', error);
+                }
             }
         }
 
@@ -1323,10 +1575,10 @@
             setOnlineStatus(false);
         });
 
-        // Обновляем список игроков каждые 30 секунд
+        // Обновление списка игроков каждые 30 секунд
         setInterval(loadOnlinePlayers, 30000);
 
-        console.log('✅ Лобби загружено');
+        console.log('✅ Лобби загружено полностью');
     </script>
 </body>
 </html>
