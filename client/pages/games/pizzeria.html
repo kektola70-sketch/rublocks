@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🍕 Работа в пиццерии - RuBlocks</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Игровой UI */
+        .game-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .game-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .stat-icon { font-size: 18px; }
+        .stat-value { font-weight: bold; font-size: 16px; }
+
+        .btn-leave {
+            padding: 10px 20px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Сцена */
+        .game-scene {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #90EE90 60%, #228B22 100%);
+            position: relative;
+            padding-top: 60px;
+        }
+
+        /* Пиццерия */
+        .pizzeria {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 250px;
+            background: linear-gradient(to bottom, #8B4513 0%, #A0522D 100%);
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pizzeria-sign {
+            background: #ff6b6b;
+            padding: 10px 30px;
+            border-radius: 10px;
+            margin-top: -20px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .pizzeria-windows {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .window {
+            width: 60px;
+            height: 80px;
+            background: #87CEEB;
+            border: 5px solid #654321;
+            border-radius: 5px;
+        }
+
+        .pizzeria-door {
+            width: 70px;
+            height: 100px;
+            background: #654321;
+            border-radius: 5px 5px 0 0;
+            margin-top: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pizzeria-door:hover {
+            background: #8B4513;
+        }
+
+        .door-handle {
+            width: 10px;
+            height: 10px;
+            background: gold;
+            border-radius: 50%;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+        }
+
+        /* Выбор роли */
+        .role-selection {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 200;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .role-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .role-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b6b;
+        }
+
+        .role-icon { font-size: 40px; margin-bottom: 10px; }
+        .role-name { font-weight: bold; margin-bottom: 5px; }
+        .role-desc { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .role-pay { color: #4ade80; font-size: 14px; margin-top: 8px; }
+
+        /* Рабочее место */
+        .workplace {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #2d2d2d;
+            z-index: 150;
+        }
+
+        .workplace.active { display: block; }
+
+        .workplace-header {
+            background: #ff6b6b;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workplace-title { font-size: 18px; font-weight: bold; }
+
+        .btn-exit-work {
+            padding: 8px 20px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Кухня (повар) */
+        .kitchen {
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            height: calc(100% - 60px);
+        }
+
+        .orders-panel {
+            width: 250px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .orders-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff6b6b;
+        }
+
+        .order-card {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover { background: rgba(255,255,255,0.2); }
+        .order-card.active { border: 2px solid #4ade80; }
+
+        .order-id { font-size: 12px; color: #ff6b6b; }
+        .order-items { margin-top: 5px; font-size: 14px; }
+        .order-timer { font-size: 11px; color: #ffd700; margin-top: 5px; }
+
+        .cooking-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .pizza-station {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pizza-base {
+            width: 200px;
+            height: 200px;
+            background: #F4D03F;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 10px solid #D4AC0D;
+        }
+
+        .pizza-toppings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .topping {
+            font-size: 24px;
+            cursor: default;
+        }
+
+        .ingredients-panel {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .ingredient {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ingredient:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cooking-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-cook {
+            padding: 15px 30px;
+            background: #4ade80;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cook:hover { transform: scale(1.05); }
+
+        .btn-clear {
+            padding: 15px 30px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Касса */
+        .cashier-area {
+            padding: 20px;
+            height: calc(100% - 60px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customers-queue {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .customer {
+            flex-shrink: 0;
+            width: 100px;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .customer:hover { transform: translateY(-5px); }
+        .customer.serving { border: 3px solid #4ade80; }
+
+        .customer-avatar { font-size: 40px; margin-bottom: 8px; }
+        .customer-name { font-size: 12px; font-weight: bold; }
+        .customer-mood { font-size: 20px; margin-top: 5px; }
+
+        .register {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-screen {
+            background: #2ecc71;
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+
+        .register-total {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .register-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 300px;
+        }
+
+        .register-btn {
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .register-btn:hover { background: rgba(255,255,255,0.2); }
+        .register-btn.green { background: #4ade80; }
+        .register-btn.red { background: #e74c3c; }
+
+        /* Доставка */
+        .delivery-area {
+            padding: 20px;
+            height: calc(100% - 60px);
+        }
+
+        .delivery-map {
+            width: 100%;
+            height: 300px;
+            background: #3d5c5c;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .map-roads {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 45%, #555 45%, #555 55%, transparent 55%),
+                linear-gradient(0deg, transparent 45%, #555 45%, #555 55%, transparent 55%);
+        }
+
+        .delivery-car {
+            position: absolute;
+            font-size: 30px;
+            transition: all 1s;
+        }
+
+        .delivery-house {
+            position: absolute;
+            font-size: 30px;
+        }
+
+        .delivery-orders {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .delivery-order {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delivery-order:hover { background: rgba(255,255,255,0.2); }
+
+        .delivery-address { font-weight: bold; margin-bottom: 5px; }
+        .delivery-items { font-size: 13px; color: rgba(255,255,255,0.7); }
+        .delivery-tip { color: #4ade80; margin-top: 8px; }
+
+        /* Награда */
+        .reward-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 300;
+            animation: popIn 0.3s;
+        }
+
+        .reward-popup.show { display: block; }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .reward-icon { font-size: 60px; margin-bottom: 15px; }
+        .reward-title { font-size: 24px; font-weight: bold; color: #4ade80; margin-bottom: 10px; }
+        .reward-amount { font-size: 36px; font-weight: bold; color: #ffd700; }
+        .reward-rubox { display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        .btn-continue {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #ff6b6b;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            .pizzeria { width: 300px; height: 200px; }
+            .roles-grid { grid-template-columns: 1fr; }
+            .kitchen { flex-direction: column; }
+            .orders-panel { width: 100%; }
+            .pizza-base { width: 150px; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Игровой UI -->
+    <div class="game-header">
+        <div class="game-title">🍕 Пиццерия RuBlocks</div>
+        <div class="game-stats">
+            <div class="stat">
+                <span class="stat-icon">💰</span>
+                <span class="stat-value" id="earned-rubox">0</span>
+                <span>Rubox</span>
+            </div>
+            <div class="stat">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-value" id="reputation">100</span>
+                <span>Репутация</span>
+            </div>
+        </div>
+        <button class="btn-leave" onclick="leaveGame()">Выйти</button>
+    </div>
+
+    <!-- Сцена -->
+    <div class="game-scene" id="game-scene">
+        <div class="pizzeria">
+            <div class="pizzeria-sign">🍕 PIZZA RU</div>
+            <div class="pizzeria-windows">
+                <div class="window"></div>
+                <div class="window"></div>
+            </div>
+            <div class="pizzeria-door" onclick="enterPizzeria()">
+                <div class="door-handle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Выбор роли -->
+    <div class="role-selection" id="role-selection" style="display:none;">
+        <div class="role-title">Выберите работу</div>
+        <div class="roles-grid">
+            <div class="role-card" onclick="selectRole('cook')">
+                <div class="role-icon">👨‍🍳</div>
+                <div class="role-name">Повар</div>
+                <div class="role-desc">Готовьте вкусную пиццу</div>
+                <div class="role-pay">💰 15 Rubox/заказ</div>
+            </div>
+            <div class="role-card" onclick="selectRole('cashier')">
+                <div class="role-icon">💵</div>
+                <div class="role-name">Кассир</div>
+                <div class="role-desc">Принимайте заказы</div>
+                <div class="role-pay">💰 10 Rubox/заказ</div>
+            </div>
+            <div class="role-card" onclick="selectRole('delivery')">
+                <div class="role-icon">🚗</div>
+                <div class="role-name">Доставщик</div>
+                <div class="role-desc">Доставляйте пиццу</div>
+                <div class="role-pay">💰 20 Rubox + чаевые</div>
+            </div>
+            <div class="role-card" onclick="selectRole('manager')">
+                <div class="role-icon">👔</div>
+                <div class="role-name">Менеджер</div>
+                <div class="role-desc">Управляйте всем</div>
+                <div class="role-pay">💰 25 Rubox/мин</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кухня -->
+    <div class="workplace" id="workplace-cook">
+        <div class="workplace-header">
+            <span class="workplace-title">👨‍🍳 Кухня</span>
+            <button class="btn-exit-work" onclick="exitWorkplace()">Выйти</button>
+        </div>
+        <div class="kitchen">
+            <div class="orders-panel">
+                <div class="orders-title">📋 Заказы</div>
+                <div id="cook-orders"></div>
+            </div>
+            <div class="cooking-area">
+                <div class="pizza-station">
+                    <h3 style="margin-bottom:15px;">🍕 Приготовление</h3>
+                    <div class="pizza-base" id="pizza-base">
+                        <div class="pizza-toppings" id="pizza-toppings"></div>
+                    </div>
+                    <div class="ingredients-panel">
+                        <div class="ingredient" onclick="addTopping('🍅')">🍅</div>
+                        <div class="ingredient" onclick="addTopping('🧀')">🧀</div>
+                        <div class="ingredient" onclick="addTopping('🍄')">🍄</div>
+                        <div class="ingredient" onclick="addTopping('🌶️')">🌶️</div>
+                        <div class="ingredient" onclick="addTopping('🥓')">🥓</div>
+                        <div class="ingredient" onclick="addTopping('🫒')">🫒</div>
+                    </div>
+                    <div class="cooking-actions">
+                        <button class="btn-cook" onclick="cookPizza()">🔥 Готовить</button>
+                        <button class="btn-clear" onclick="clearPizza()">🗑️ Очистить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Касса -->
+    <div class="workplace" id="workplace-cashier">
+        <div class="workplace-header">
+            <span class="workplace-title">💵 Касса</span>
+            <button class="btn-exit-work" onclick="exitWorkplace()">Выйти</button>
+        </div>
+        <div class="cashier-area">
+            <div class="customers-queue" id="customers-queue"></div>
+            <div class="register">
+                <div class="register-screen">
+                    <div>К оплате:</div>
+                    <div class="register-total" id="register-total">0 ₽</div>
+                </div>
+                <div class="register-buttons">
+                    <button class="register-btn" onclick="addAmount(100)">100</button>
+                    <button class="register-btn" onclick="addAmount(200)">200</button>
+                    <button class="register-btn" onclick="addAmount(500)">500</button>
+                    <button class="register-btn" onclick="addAmount(50)">50</button>
+                    <button class="register-btn green" onclick="completeOrder()">✓</button>
+                    <button class="register-btn red" onclick="clearAmount()">C</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Доставка -->
+    <div class="workplace" id="workplace-delivery">
+        <div class="workplace-header">
+            <span class="workplace-title">🚗 Доставка</span>
+            <button class="btn-exit-work" onclick="exitWorkplace()">Выйти</button>
+        </div>
+        <div class="delivery-area">
+            <div class="delivery-map" id="delivery-map">
+                <div class="map-roads"></div>
+                <div class="delivery-car" id="delivery-car" style="left:50%;top:50%;">🚗</div>
+            </div>
+            <h3 style="margin-bottom:15px;">📦 Заказы на доставку</h3>
+            <div class="delivery-orders" id="delivery-orders"></div>
+        </div>
+    </div>
+
+    <!-- Награда -->
+    <div class="reward-popup" id="reward-popup">
+        <div class="reward-icon">🎉</div>
+        <div class="reward-title">Отличная работа!</div>
+        <div class="reward-rubox">
+            <span>+</span>
+            <span class="reward-amount" id="reward-amount">0</span>
+            <span>Rubox</span>
+        </div>
+        <button class="btn-continue" onclick="closeReward()">Продолжить</button>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA76Du2jnVguJavcO7k6XFEQJ0tPhHF_UI",
+            authDomain: "rublocks-2862b.firebaseapp.com",
+            projectId: "rublocks-2862b",
+            storageBucket: "rublocks-2862b.firebasestorage.app",
+            messagingSenderId: "1035853997972",
+            appId: "1:1035853997972:web:77cf13e7197b9387cd9181"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let earnedRubox = 0;
+        let reputation = 100;
+        let currentRole = null;
+        let currentToppings = [];
+        let currentOrderIndex = 0;
+        let registerAmount = 0;
+
+        // Заказы
+        const pizzaOrders = [
+            { id: 1, items: ['🍅', '🧀'], name: 'Маргарита' },
+            { id: 2, items: ['🧀', '🥓', '🍄'], name: 'Мясная' },
+            { id: 3, items: ['🍅', '🧀', '🌶️'], name: 'Острая' },
+            { id: 4, items: ['🧀', '🫒', '🍄'], name: 'Вегетарианская' }
+        ];
+
+        const customers = [
+            { name: 'Иван', avatar: '👨', order: 250 },
+            { name: 'Мария', avatar: '👩', order: 450 },
+            { name: 'Петр', avatar: '🧔', order: 350 },
+            { name: 'Анна', avatar: '👧', order: 550 }
+        ];
+
+        const deliveryAddresses = [
+            { address: 'ул. Пушкина, 10', items: '2x Пепперони', tip: 50 },
+            { address: 'пр. Ленина, 25', items: '1x Маргарита', tip: 30 },
+            { address: 'ул. Мира, 5', items: '3x Мясная', tip: 80 }
+        ];
+
+        // Авторизация
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = '../lobby.html';
+            }
+        });
+
+        function enterPizzeria() {
+            document.getElementById('role-selection').style.display = 'block';
+        }
+
+        function selectRole(role) {
+            currentRole = role;
+            document.getElementById('role-selection').style.display = 'none';
+            document.getElementById('game-scene').style.display = 'none';
+            
+            if (role === 'cook') {
+                document.getElementById('workplace-cook').classList.add('active');
+                generateOrders();
+            } else if (role === 'cashier') {
+                document.getElementById('workplace-cashier').classList.add('active');
+                generateCustomers();
+            } else if (role === 'delivery') {
+                document.getElementById('workplace-delivery').classList.add('active');
+                generateDeliveries();
+            } else if (role === 'manager') {
+                // Менеджер получает пассивный доход
+                setInterval(() => {
+                    addRubox(5);
+                }, 10000);
+                alert('Вы менеджер! Получаете 5 Rubox каждые 10 секунд');
+            }
+        }
+
+        function exitWorkplace() {
+            document.querySelectorAll('.workplace').forEach(w => w.classList.remove('active'));
+            document.getElementById('game-scene').style.display = 'block';
+            currentRole = null;
+        }
+
+        // Повар
+        function generateOrders() {
+            const container = document.getElementById('cook-orders');
+            container.innerHTML = pizzaOrders.map((order, i) => `
+                <div class="order-card ${i === currentOrderIndex ? 'active' : ''}" onclick="selectOrder(${i})">
+                    <div class="order-id">Заказ #${order.id}</div>
+                    <div class="order-items">${order.name}: ${order.items.join(' ')}</div>
+                    <div class="order-timer">⏱️ 2:00</div>
+                </div>
+            `).join('');
+        }
+
+        function selectOrder(index) {
+            currentOrderIndex = index;
+            generateOrders();
+        }
+
+        function addTopping(topping) {
+            if (currentToppings.length < 6) {
+                currentToppings.push(topping);
+                renderToppings();
+            }
+        }
+
+        function renderToppings() {
+            document.getElementById('pizza-toppings').innerHTML = currentToppings.map(t => 
+                `<span class="topping">${t}</span>`
+            ).join('');
+        }
+
+        function clearPizza() {
+            currentToppings = [];
+            renderToppings();
+        }
+
+        function cookPizza() {
+            const order = pizzaOrders[currentOrderIndex];
+            const isCorrect = order.items.every(i => currentToppings.includes(i)) && 
+                             currentToppings.length === order.items.length;
+            
+            if (isCorrect) {
+                showReward(15);
+                clearPizza();
+                pizzaOrders.splice(currentOrderIndex, 1);
+                currentOrderIndex = 0;
+                generateOrders();
+            } else {
+                alert('Неправильные ингредиенты! Проверьте заказ');
+                reputation -= 5;
+                updateStats();
+            }
+        }
+
+        // Кассир
+        function generateCustomers() {
+            const queue = document.getElementById('customers-queue');
+            queue.innerHTML = customers.map((c, i) => `
+                <div class="customer ${i === 0 ? 'serving' : ''}" onclick="serveCustomer(${i})">
+                    <div class="customer-avatar">${c.avatar}</div>
+                    <div class="customer-name">${c.name}</div>
+                    <div class="customer-mood">😊</div>
+                </div>
+            `).join('');
+
+            if (customers.length > 0) {
+                document.getElementById('register-total').textContent = customers[0].order + ' ₽';
+            }
+        }
+
+        function addAmount(amount) {
+            registerAmount += amount;
+        }
+
+        function clearAmount() {
+            registerAmount = 0;
+        }
+
+        function completeOrder() {
+            if (customers.length > 0) {
+                const customer = customers[0];
+                if (registerAmount >= customer.order) {
+                    showReward(10);
+                    customers.shift();
+                    registerAmount = 0;
+                    generateCustomers();
+                } else {
+                    alert('Недостаточно денег!');
+                }
+            }
+        }
+
+        // Доставка
+        function generateDeliveries() {
+            const container = document.getElementById('delivery-orders');
+            container.innerHTML = deliveryAddresses.map((d, i) => `
+                <div class="delivery-order" onclick="deliverOrder(${i})">
+                    <div class="delivery-address">📍 ${d.address}</div>
+                    <div class="delivery-items">${d.items}</div>
+                    <div class="delivery-tip">💰 Чаевые: +${d.tip} Rubox</div>
+                </div>
+            `).join('');
+        }
+
+        function deliverOrder(index) {
+            const order = deliveryAddresses[index];
+            const car = document.getElementById('delivery-car');
+            
+            // Анимация доставки
+            car.style.left = Math.random() * 80 + 10 + '%';
+            car.style.top = Math.random() * 80 + 10 + '%';
+            
+            setTimeout(() => {
+                showReward(20 + order.tip);
+                deliveryAddresses.splice(index, 1);
+                generateDeliveries();
+                car.style.left = '50%';
+                car.style.top = '50%';
+            }, 1500);
+        }
+
+        // Награды
+        function showReward(amount) {
+            earnedRubox += amount;
+            updateStats();
+            
+            document.getElementById('reward-amount').textContent = amount;
+            document.getElementById('reward-popup').classList.add('show');
+        }
+
+        function closeReward() {
+            document.getElementById('reward-popup').classList.remove('show');
+        }
+
+        function addRubox(amount) {
+            earnedRubox += amount;
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('earned-rubox').textContent = earnedRubox;
+            document.getElementById('reputation').textContent = reputation;
+        }
+
+        async function leaveGame() {
+            if (earnedRubox > 0 && currentUser) {
+                // Сохраняем заработок
+                const userRef = db.collection('users').doc(currentUser.uid);
+                const doc = await userRef.get();
+                const currentRubox = doc.data()?.rubox || 0;
+                
+                await userRef.update({
+                    rubox: currentRubox + earnedRubox,
+                    gamesPlayed: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                alert(`Вы заработали ${earnedRubox} Rubox!`);
+            }
+            window.location.href = '../lobby.html';
+        }
+    </script>
+</body>
+</html>
