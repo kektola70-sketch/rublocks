@@ -3,70 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RuBlocks - Русский Roblox с реальной авторизацией">
+    <meta name="keywords" content="rublocks, roblox, игры, онлайн игры, браузерные игры">
+    <meta name="author" content="tolikpro128">
     <title>RuBlocks - Авторизация</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Дополнительные стили для страницы авторизации */
+        .auth-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .auth-footer p {
+            color: white;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .auth-footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Индикатор силы пароля */
+        .password-strength-indicator {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s;
+        }
+
+        .password-strength-weak {
+            width: 33%;
+            background: #e74c3c;
+        }
+
+        .password-strength-medium {
+            width: 66%;
+            background: #f39c12;
+        }
+
+        .password-strength-strong {
+            width: 100%;
+            background: #27ae60;
+        }
+
+        .password-strength-text {
+            font-size: 11px;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        /* Анимация загрузки кнопки */
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Чекбокс запомнить меня */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Ссылка "Забыли пароль?" */
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+        .forgot-password a {
+            font-size: 13px;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
         <div class="auth-box">
+            <!-- Логотип и заголовок -->
             <h1>🎮 RuBlocks</h1>
-            <p class="subtitle">Русский Roblox</p>
+            <p class="subtitle">Русский Roblox - Играй, создавай, общайся!</p>
             
+            <!-- Переключатель вкладок -->
             <div id="auth-tabs">
                 <button class="tab-btn active" data-tab="login">Вход</button>
                 <button class="tab-btn" data-tab="register">Регистрация</button>
             </div>
 
-            <!-- Форма входа -->
+            <!-- ==========================================
+                 ФОРМА ВХОДА
+                 ========================================== -->
             <form id="login-form" class="auth-form">
                 <h2>Вход в аккаунт</h2>
+                
                 <div class="input-group">
                     <label>📧 Email</label>
-                    <input type="email" id="login-email" required placeholder="your@email.com">
+                    <input 
+                        type="email" 
+                        id="login-email" 
+                        required 
+                        placeholder="your@email.com"
+                        autocomplete="email"
+                        autofocus>
                 </div>
+                
                 <div class="input-group">
                     <label>🔒 Пароль</label>
-                    <input type="password" id="login-password" required placeholder="Введите пароль">
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        required 
+                        placeholder="Введите пароль"
+                        autocomplete="current-password">
                 </div>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="forgotPassword(); return false;">Забыли пароль?</a>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember-me" checked>
+                    <label for="remember-me">Запомнить меня</label>
+                </div>
+                
                 <button type="submit" class="btn-primary">
                     <span class="btn-text">Войти</span>
                     <span class="btn-loader" style="display: none;">⏳</span>
                 </button>
+                
                 <p class="error-message" id="login-error"></p>
             </form>
 
-            <!-- Форма регистрации -->
+            <!-- ==========================================
+                 ФОРМА РЕГИСТРАЦИИ
+                 ========================================== -->
             <form id="register-form" class="auth-form" style="display: none;">
                 <h2>Создать аккаунт</h2>
+                
                 <div class="input-group">
                     <label>👤 Имя пользователя</label>
-                    <input type="text" id="register-username" required placeholder="Ваше имя" minlength="3">
+                    <input 
+                        type="text" 
+                        id="register-username" 
+                        required 
+                        placeholder="Ваше имя в игре" 
+                        minlength="3"
+                        maxlength="20"
+                        pattern="[a-zA-Zа-яА-Я0-9_]+"
+                        title="Только буквы, цифры и _">
+                    <small style="color: #999; font-size: 12px;">Минимум 3 символа, только буквы и цифры</small>
                 </div>
+                
                 <div class="input-group">
                     <label>📧 Email</label>
-                    <input type="email" id="register-email" required placeholder="your@email.com">
+                    <input 
+                        type="email" 
+                        id="register-email" 
+                        required 
+                        placeholder="your@email.com"
+                        autocomplete="email">
                 </div>
+                
                 <div class="input-group">
                     <label>🔒 Пароль</label>
-                    <input type="password" id="register-password" required placeholder="Минимум 6 символов" minlength="6">
+                    <input 
+                        type="password" 
+                        id="register-password" 
+                        required 
+                        placeholder="Минимум 6 символов" 
+                        minlength="6"
+                        autocomplete="new-password">
+                    <div class="password-strength-indicator">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <div class="password-strength-text" id="password-strength-text"></div>
                 </div>
+                
                 <div class="input-group">
                     <label>🔒 Подтверждение пароля</label>
-                    <input type="password" id="register-password-confirm" required placeholder="Повторите пароль">
+                    <input 
+                        type="password" 
+                        id="register-password-confirm" 
+                        required 
+                        placeholder="Повторите пароль"
+                        autocomplete="new-password">
                 </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="agree-terms" required>
+                    <label for="agree-terms">Я согласен с <a href="#" style="color: #667eea;">правилами</a></label>
+                </div>
+                
                 <button type="submit" class="btn-primary">
                     <span class="btn-text">Зарегистрироваться</span>
                     <span class="btn-loader" style="display: none;">⏳</span>
                 </button>
+                
                 <p class="error-message" id="register-error"></p>
             </form>
 
+            <!-- Разделитель -->
             <div class="divider">или</div>
 
+            <!-- Вход через Google -->
             <button class="btn-google" id="google-login-btn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20">
                 Войти через Google
             </button>
+        </div>
+
+        <!-- Футер -->
+        <div class="auth-footer">
+            <p>🔒 Защищено Firebase Authentication</p>
+            <p>© 2024 RuBlocks | Создано <a href="#">tolikpro128</a></p>
+            <p style="font-size: 11px; margin-top: 10px;">
+                <a href="#">О проекте</a> • 
+                <a href="#">Правила</a> • 
+                <a href="#">Поддержка</a>
+            </p>
         </div>
     </div>
 
@@ -75,13 +281,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <!-- Наши скрипты -->
     <script>
         // ==========================================
-        // ВСТРОЕННЫЙ КОД (чтобы точно работало)
-        // ==========================================
-
         // Firebase Configuration
+        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyA76Du2jnVguJavcO7k6XFEQJ0tPhHF_UI",
             authDomain: "rublocks-2862b.firebaseapp.com",
@@ -97,6 +300,9 @@
         const db = firebase.firestore();
 
         console.log('✅ Firebase инициализирован');
+
+        // Включаем русский язык для ошибок
+        auth.languageCode = 'ru';
 
         // ==========================================
         // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
@@ -118,14 +324,61 @@
                 // Показываем нужную форму
                 if (tab === 'login') {
                     document.getElementById('login-form').style.display = 'block';
+                    document.getElementById('login-email').focus();
                 } else {
                     document.getElementById('register-form').style.display = 'block';
+                    document.getElementById('register-username').focus();
                 }
                 
                 // Очищаем ошибки
                 document.getElementById('login-error').textContent = '';
                 document.getElementById('register-error').textContent = '';
+                document.getElementById('login-error').style.display = 'none';
+                document.getElementById('register-error').style.display = 'none';
             });
+        });
+
+        // ==========================================
+        // ПРОВЕРКА СИЛЫ ПАРОЛЯ
+        // ==========================================
+        document.getElementById('register-password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthText = document.getElementById('password-strength-text');
+
+            if (password.length === 0) {
+                strengthBar.className = 'password-strength-bar';
+                strengthText.textContent = '';
+                return;
+            }
+
+            let strength = 0;
+            
+            // Длина
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            
+            // Разные типы символов
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+            // Устанавливаем класс
+            strengthBar.className = 'password-strength-bar';
+            
+            if (strength <= 2) {
+                strengthBar.classList.add('password-strength-weak');
+                strengthText.textContent = '🔴 Слабый пароль';
+                strengthText.style.color = '#e74c3c';
+            } else if (strength <= 4) {
+                strengthBar.classList.add('password-strength-medium');
+                strengthText.textContent = '🟡 Средний пароль';
+                strengthText.style.color = '#f39c12';
+            } else {
+                strengthBar.classList.add('password-strength-strong');
+                strengthText.textContent = '🟢 Сильный пароль';
+                strengthText.style.color = '#27ae60';
+            }
         });
 
         // ==========================================
@@ -133,33 +386,85 @@
         // ==========================================
         
         // Проверка текущего пользователя
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 console.log('✅ Пользователь авторизован:', user.email);
-                // Перенаправляем в игру
-                window.location.href = 'pages/game.html';
+                
+                // Проверяем наличие профиля в Firestore
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    
+                    if (!doc.exists) {
+                        console.log('📝 Создание профиля...');
+                        // Создаём профиль если его нет
+                        await db.collection('users').doc(user.uid).set({
+                            username: user.displayName || user.email.split('@')[0],
+                            email: user.email,
+                            photoURL: user.photoURL,
+                            stats: {
+                                gamesPlayed: 0,
+                                wins: 0,
+                                highScore: 0,
+                                totalPlayTime: 0,
+                                level: 1,
+                                coins: 100,
+                                gems: 10
+                            },
+                            inventory: [],
+                            friends: [],
+                            achievements: [],
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
+                        });
+                    } else {
+                        // Обновляем время последнего входа
+                        await db.collection('users').doc(user.uid).update({
+                            lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
+                        });
+                    }
+                } catch (error) {
+                    console.error('❌ Ошибка работы с профилем:', error);
+                }
+                
+                // Перенаправляем в лобби
+                window.location.href = 'pages/lobby.html';
             } else {
                 console.log('❌ Пользователь не авторизован');
             }
         });
 
-        // Вход
+        // ==========================================
+        // ВХОД
+        // ==========================================
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
             const errorEl = document.getElementById('login-error');
             const btn = e.target.querySelector('.btn-primary');
             const btnText = btn.querySelector('.btn-text');
             const btnLoader = btn.querySelector('.btn-loader');
 
             try {
+                // Показываем загрузку
                 btnText.style.display = 'none';
                 btnLoader.style.display = 'inline';
                 btn.disabled = true;
                 errorEl.textContent = '';
+                errorEl.style.display = 'none';
 
+                // Устанавливаем персистентность
+                if (rememberMe) {
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                } else {
+                    await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+                }
+
+                // Входим
                 await auth.signInWithEmailAndPassword(email, password);
                 console.log('✅ Вход выполнен');
 
@@ -168,13 +473,16 @@
                 errorEl.textContent = getErrorMessage(error.code);
                 errorEl.style.display = 'block';
                 
+                // Скрываем загрузку
                 btnText.style.display = 'inline';
                 btnLoader.style.display = 'none';
                 btn.disabled = false;
             }
         });
 
-        // Регистрация
+        // ==========================================
+        // РЕГИСТРАЦИЯ
+        // ==========================================
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -187,7 +495,7 @@
             const btnText = btn.querySelector('.btn-text');
             const btnLoader = btn.querySelector('.btn-loader');
 
-            // Валидация
+            // Валидация на клиенте
             if (password !== passwordConfirm) {
                 errorEl.textContent = '❌ Пароли не совпадают!';
                 errorEl.style.display = 'block';
@@ -200,11 +508,28 @@
                 return;
             }
 
+            if (!/^[a-zA-Zа-яА-Я0-9_]+$/.test(username)) {
+                errorEl.textContent = '❌ Имя может содержать только буквы, цифры и _';
+                errorEl.style.display = 'block';
+                return;
+            }
+
             try {
+                // Показываем загрузку
                 btnText.style.display = 'none';
                 btnLoader.style.display = 'inline';
                 btn.disabled = true;
                 errorEl.textContent = '';
+                errorEl.style.display = 'none';
+
+                // Проверяем уникальность имени пользователя
+                const usernameQuery = await db.collection('users')
+                    .where('username', '==', username)
+                    .get();
+
+                if (!usernameQuery.empty) {
+                    throw new Error('Имя пользователя уже занято!');
+                }
 
                 // Создаём пользователя
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -219,61 +544,157 @@
                 await db.collection('users').doc(user.uid).set({
                     username: username,
                     email: email,
+                    photoURL: user.photoURL,
                     stats: {
                         gamesPlayed: 0,
+                        wins: 0,
                         highScore: 0,
+                        totalPlayTime: 0,
                         level: 1,
-                        coins: 0
+                        coins: 100, // Стартовые монеты
+                        gems: 10    // Стартовые гемы
                     },
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    inventory: [],
+                    friends: [],
+                    achievements: [],
+                    settings: {
+                        notifications: true,
+                        soundEnabled: true,
+                        musicEnabled: true
+                    },
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                    isOnline: true
                 });
 
                 console.log('✅ Регистрация успешна');
                 
+                // Показываем успех
                 errorEl.className = 'success-message';
-                errorEl.textContent = '✅ Регистрация успешна! Перенаправление...';
+                errorEl.textContent = '✅ Регистрация успешна! Перенаправление в лобби...';
                 errorEl.style.display = 'block';
+
+                // Firebase автоматически перенаправит через onAuthStateChanged
 
             } catch (error) {
                 console.error('❌ Ошибка регистрации:', error);
                 errorEl.className = 'error-message';
-                errorEl.textContent = getErrorMessage(error.code);
+                errorEl.textContent = error.message || getErrorMessage(error.code);
                 errorEl.style.display = 'block';
                 
+                // Скрываем загрузку
                 btnText.style.display = 'inline';
                 btnLoader.style.display = 'none';
                 btn.disabled = false;
             }
         });
 
-        // Вход через Google
+        // ==========================================
+        // ВХОД ЧЕРЕЗ GOOGLE
+        // ==========================================
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             try {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                await auth.signInWithPopup(provider);
-                console.log('✅ Вход через Google выполнен');
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+                
+                const result = await auth.signInWithPopup(provider);
+                console.log('✅ Вход через Google выполнен:', result.user.email);
+                
+                // Проверяем наличие профиля
+                const doc = await db.collection('users').doc(result.user.uid).get();
+                
+                if (!doc.exists) {
+                    // Создаём профиль для нового пользователя Google
+                    await db.collection('users').doc(result.user.uid).set({
+                        username: result.user.displayName || result.user.email.split('@')[0],
+                        email: result.user.email,
+                        photoURL: result.user.photoURL,
+                        stats: {
+                            gamesPlayed: 0,
+                            wins: 0,
+                            highScore: 0,
+                            totalPlayTime: 0,
+                            level: 1,
+                            coins: 100,
+                            gems: 10
+                        },
+                        inventory: [],
+                        friends: [],
+                        achievements: [],
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        isOnline: true
+                    });
+                }
+
             } catch (error) {
                 console.error('❌ Ошибка входа через Google:', error);
-                alert('Ошибка входа через Google');
+                
+                if (error.code !== 'auth/popup-closed-by-user') {
+                    alert('Ошибка входа через Google: ' + getErrorMessage(error.code));
+                }
             }
         });
 
-        // Перевод ошибок
+        // ==========================================
+        // ВОССТАНОВЛЕНИЕ ПАРОЛЯ
+        // ==========================================
+        async function forgotPassword() {
+            const email = prompt('Введите ваш email для восстановления пароля:');
+            
+            if (!email) return;
+
+            try {
+                await auth.sendPasswordResetEmail(email);
+                alert('✅ Письмо для восстановления пароля отправлено на ' + email);
+            } catch (error) {
+                console.error('❌ Ошибка восстановления пароля:', error);
+                alert('Ошибка: ' + getErrorMessage(error.code));
+            }
+        }
+
+        // ==========================================
+        // ПЕРЕВОД ОШИБОК
+        // ==========================================
         function getErrorMessage(errorCode) {
             const errors = {
                 'auth/email-already-in-use': 'Этот email уже используется',
                 'auth/invalid-email': 'Неверный формат email',
                 'auth/weak-password': 'Слишком простой пароль (минимум 6 символов)',
-                'auth/user-not-found': 'Пользователь не найден',
+                'auth/user-not-found': 'Пользователь с таким email не найден',
                 'auth/wrong-password': 'Неверный пароль',
                 'auth/invalid-credential': 'Неверный email или пароль',
-                'auth/too-many-requests': 'Слишком много попыток. Попробуйте позже',
-                'auth/network-request-failed': 'Ошибка сети. Проверьте подключение'
+                'auth/too-many-requests': 'Слишком много попыток входа. Попробуйте позже',
+                'auth/network-request-failed': 'Ошибка сети. Проверьте подключение к интернету',
+                'auth/user-disabled': 'Этот аккаунт заблокирован',
+                'auth/operation-not-allowed': 'Операция не разрешена',
+                'auth/popup-closed-by-user': 'Окно входа было закрыто',
+                'auth/cancelled-popup-request': 'Запрос отменён'
             };
+
             return errors[errorCode] || `Ошибка: ${errorCode}`;
         }
 
-        console.log('✅ Скрипты загружены');
+        // ==========================================
+        // ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ
+        // ==========================================
+
+        // Автофокус на первое поле при загрузке
+        window.addEventListener('load', () => {
+            document.getElementById('login-email').focus();
+        });
+
+        // Enter для отправки формы
+        document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.target.closest('form').querySelector('button[type="submit"]').click();
+            }
+        });
+
+        console.log('✅ Скрипты авторизации загружены');
+        console.log('📱 Устройство:', /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Мобильное' : 'ПК');
     </script>
 </body>
 </html>
