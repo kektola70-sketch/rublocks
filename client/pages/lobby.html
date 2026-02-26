@@ -55,7 +55,6 @@
             margin-top: 20px;
             font-size: 20px;
             color: #667eea;
-            font-weight: 600;
         }
 
         /* ==========================================
@@ -63,7 +62,7 @@
            ========================================== */
         .lobby-header {
             background: rgba(0, 0, 0, 0.5);
-            padding: 15px 20px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -75,7 +74,7 @@
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -83,39 +82,48 @@
             background-clip: text;
         }
 
+        .header-nav {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-tab .badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
         .user-panel {
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #667eea;
-            cursor: pointer;
-        }
-
-        .user-info-header {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-name {
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .user-level {
-            font-size: 11px;
-            color: #ffd700;
-        }
-
-        .user-balance {
-            display: flex;
-            gap: 10px;
-            font-size: 13px;
+            gap: 12px;
         }
 
         .balance-item {
@@ -125,29 +133,50 @@
             background: rgba(255,255,255,0.1);
             padding: 5px 12px;
             border-radius: 15px;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+            cursor: pointer;
         }
 
         .btn-logout {
-            padding: 8px 18px;
+            padding: 8px 16px;
             background: #e74c3c;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 13px;
-            transition: all 0.3s;
-        }
-
-        .btn-logout:hover {
-            background: #c0392b;
+            font-size: 12px;
         }
 
         /* ==========================================
-           CONNECTIONS - ГОРИЗОНТАЛЬНАЯ ЛИНИЯ
+           ОСНОВНЫЕ ЭКРАНЫ
+           ========================================== */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ==========================================
+           CONNECTIONS SECTION
            ========================================== */
         .connections-section {
-            padding: 20px;
+            padding: 15px 20px;
             background: rgba(0,0,0,0.2);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -156,39 +185,38 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .connections-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #667eea;
         }
 
         .connections-count {
             font-size: 12px;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.5);
         }
 
         .connections-row {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        /* Кнопка Add Connections */
         .btn-add-connection {
             flex-shrink: 0;
-            width: 70px;
-            height: 90px;
+            width: 65px;
+            height: 85px;
             background: rgba(102, 126, 234, 0.2);
             border: 2px dashed #667eea;
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -199,34 +227,26 @@
         }
 
         .btn-add-connection .add-icon {
-            font-size: 28px;
+            font-size: 24px;
         }
 
         .btn-add-connection .add-text {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             color: #667eea;
             text-align: center;
         }
 
-        /* Контейнер скролла Connections */
         .connections-scroll {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             overflow-x: auto;
-            overflow-y: hidden;
             padding: 5px 0;
-            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
 
         .connections-scroll::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .connections-scroll::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            height: 4px;
         }
 
         .connections-scroll::-webkit-scrollbar-thumb {
@@ -234,109 +254,74 @@
             border-radius: 10px;
         }
 
-        /* Карточка Connection */
         .connection-card {
             flex-shrink: 0;
-            width: 70px;
+            width: 65px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .connection-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
         }
 
         .connection-avatar-container {
             position: relative;
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 8px;
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 6px;
         }
 
         .connection-avatar {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            border: 3px solid #667eea;
-            object-fit: cover;
+            border: 2px solid #667eea;
         }
 
         .connection-status-dot {
             position: absolute;
             bottom: 2px;
             right: 2px;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             border: 2px solid #1a1a2e;
         }
 
-        .connection-status-dot.online {
-            background: #4ade80;
-        }
-
-        .connection-status-dot.offline {
-            background: #6b7280;
-        }
+        .connection-status-dot.online { background: #4ade80; }
+        .connection-status-dot.offline { background: #6b7280; }
 
         .connection-name {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 70px;
         }
 
-        /* Пустое состояние */
         .connections-empty {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            font-size: 13px;
+            padding: 10px;
         }
 
         /* ==========================================
-           ГЛАВНЫЙ КОНТЕНТ
+           ЛОББИ КОНТЕНТ
            ========================================== */
-        .lobby-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+        .lobby-content {
             padding: 20px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        @media (min-width: 768px) {
-            .lobby-container {
-                grid-template-columns: 300px 1fr;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .lobby-container {
-                grid-template-columns: 300px 1fr 300px;
-            }
-        }
-
-        /* ==========================================
-           КАРТОЧКИ
-           ========================================== */
         .card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 20px;
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            border-color: rgba(102, 126, 234, 0.3);
+            margin-bottom: 20px;
         }
 
         .card-header {
@@ -344,8 +329,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .card-title {
@@ -354,9 +337,18 @@
             color: #667eea;
         }
 
-        /* ==========================================
-           ПРОФИЛЬ
-           ========================================== */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .profile-card {
             text-align: center;
         }
@@ -389,9 +381,8 @@
 
         .stat-box {
             background: rgba(102, 126, 234, 0.2);
-            padding: 12px 8px;
+            padding: 12px;
             border-radius: 10px;
-            text-align: center;
         }
 
         .stat-value {
@@ -403,153 +394,8 @@
         .stat-label {
             font-size: 10px;
             color: rgba(255,255,255,0.6);
-            margin-top: 3px;
         }
 
-        /* ==========================================
-           ЧАТ
-           ========================================== */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 400px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .chat-message {
-            margin-bottom: 12px;
-            padding: 10px 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            border-left: 3px solid #667eea;
-        }
-
-        .chat-message-user {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-
-        .chat-message-text {
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .chat-message-time {
-            font-size: 10px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 4px;
-        }
-
-        .chat-input-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-        }
-
-        .chat-input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .chat-send {
-            padding: 12px 20px;
-            background: #667eea;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .chat-send:hover {
-            background: #764ba2;
-        }
-
-        /* ==========================================
-           ОНЛАЙН ИГРОКИ
-           ========================================== */
-        .players-list {
-            max-height: 350px;
-            overflow-y: auto;
-        }
-
-        .player-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background: rgba(255,255,255,0.05);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .player-item:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .player-avatar-small {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #4ade80;
-        }
-
-        .player-info {
-            flex: 1;
-        }
-
-        .player-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .player-status {
-            font-size: 11px;
-            color: #4ade80;
-        }
-
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: #4ade80;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* ==========================================
-           МАГАЗИН
-           ========================================== */
         .shop-items {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -562,33 +408,519 @@
             padding: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
 
         .shop-item:hover {
             border-color: #ffd700;
-            transform: translateY(-2px);
         }
 
-        .shop-item-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
+        .shop-item-icon { font-size: 28px; margin-bottom: 8px; }
+        .shop-item-name { font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .shop-item-price { font-size: 11px; color: #ffd700; }
+
+        /* ==========================================
+           ЭКРАН ЧАТОВ
+           ========================================== */
+        .chats-screen {
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
         }
 
-        .shop-item-name {
-            font-size: 12px;
+        .chats-header {
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chats-title {
+            font-size: 20px;
             font-weight: bold;
+        }
+
+        .chats-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-new-chat {
+            padding: 10px 18px;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-new-chat:hover {
+            background: #764ba2;
+        }
+
+        .btn-new-group {
+            padding: 10px 18px;
+            background: #4ade80;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-new-group:hover {
+            background: #22c55e;
+        }
+
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+        }
+
+        .chat-avatar.group {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: none;
+        }
+
+        .chat-info {
+            flex: 1;
+        }
+
+        .chat-name {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .chat-last-message {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .chat-meta {
+            text-align: right;
+        }
+
+        .chat-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
             margin-bottom: 5px;
         }
 
-        .shop-item-price {
-            font-size: 11px;
-            color: #ffd700;
+        .chat-unread {
+            background: #e74c3c;
+            color: white;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .chats-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .chats-empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
         }
 
         /* ==========================================
-           МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ДРУГА
+           ПРИВАТНЫЙ ЧАТ
+           ========================================== */
+        .chat-screen {
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-back-chat {
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .chat-header-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+        }
+
+        .chat-header-avatar.group {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: none;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .chat-header-status {
+            font-size: 12px;
+            color: #4ade80;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-party {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            animation: partyGlow 2s infinite;
+        }
+
+        @keyframes partyGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(240, 147, 251, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(245, 87, 108, 0.8); }
+        }
+
+        .btn-party:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.own {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border-top-left-radius: 5px;
+        }
+
+        .message.own .message-bubble {
+            background: #667eea;
+            border-radius: 15px;
+            border-top-right-radius: 5px;
+        }
+
+        .message-sender {
+            font-size: 11px;
+            color: #667eea;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .message.own .message-sender {
+            display: none;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .chat-input-section {
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .btn-send {
+            width: 45px;
+            height: 45px;
+            background: #667eea;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .btn-send:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        /* ==========================================
+           PARTY ЭКРАН
+           ========================================== */
+        .party-screen {
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+        }
+
+        .party-header {
+            padding: 20px;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .party-title {
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .party-title-icon {
+            animation: partyBounce 1s infinite;
+        }
+
+        @keyframes partyBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .btn-leave-party {
+            padding: 10px 20px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .party-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .party-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .party-member {
+            text-align: center;
+            width: 120px;
+        }
+
+        .party-member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            border: 4px solid #667eea;
+            position: relative;
+        }
+
+        .party-member-avatar.speaking {
+            border-color: #4ade80;
+            animation: speakingPulse 0.5s infinite;
+        }
+
+        @keyframes speakingPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
+        }
+
+        .party-member-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .party-member-status {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .party-member-mic {
+            font-size: 20px;
+        }
+
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-top: auto;
+        }
+
+        .voice-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .voice-btn.mic {
+            background: #4ade80;
+            color: white;
+        }
+
+        .voice-btn.mic.muted {
+            background: #e74c3c;
+        }
+
+        .voice-btn.mic:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-btn.deafen {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .voice-btn.deafen.active {
+            background: #e74c3c;
+        }
+
+        .voice-btn.settings {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* ==========================================
+           МОДАЛЬНЫЕ ОКНА
            ========================================== */
         .modal {
             display: none;
@@ -601,7 +933,6 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
         }
 
         .modal.show {
@@ -609,30 +940,13 @@
             animation: fadeIn 0.3s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .modal-content {
             background: #1a1a2e;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 450px;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 400px;
             width: 90%;
             border: 1px solid rgba(255,255,255,0.1);
-            animation: modalIn 0.3s;
-        }
-
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
         }
 
         .modal-header {
@@ -643,7 +957,7 @@
         }
 
         .modal-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #667eea;
         }
@@ -652,19 +966,8 @@
             background: none;
             border: none;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255,255,255,0.1);
         }
 
         .input-group {
@@ -675,7 +978,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .input-group input {
@@ -688,21 +991,17 @@
             font-size: 14px;
         }
 
-        .input-group input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
         .input-group input:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        .search-results {
-            max-height: 300px;
+        .connection-select-list {
+            max-height: 250px;
             overflow-y: auto;
         }
 
-        .search-result-item {
+        .connection-select-item {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -710,48 +1009,56 @@
             background: rgba(255,255,255,0.05);
             border-radius: 10px;
             margin-bottom: 8px;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
-        .search-result-item:hover {
+        .connection-select-item:hover {
             background: rgba(255,255,255,0.1);
         }
 
-        .search-result-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        .connection-select-item.selected {
+            background: rgba(102, 126, 234, 0.3);
             border: 2px solid #667eea;
         }
 
-        .search-result-info {
-            flex: 1;
+        .connection-select-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
         }
 
-        .search-result-name {
+        .connection-select-name {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .connection-select-check {
+            font-size: 20px;
+            color: #4ade80;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            color: white;
             font-weight: bold;
             font-size: 14px;
-        }
-
-        .search-result-level {
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .btn-add {
-            padding: 8px 16px;
-            background: #4ade80;
-            color: white;
-            border: none;
-            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
+            margin-top: 10px;
             transition: all 0.3s;
         }
 
-        .btn-add:hover {
-            background: #22c55e;
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* ==========================================
@@ -780,291 +1087,312 @@
         }
 
         /* ==========================================
-           МОБИЛЬНАЯ НАВИГАЦИЯ
+           МОБИЛЬНАЯ АДАПТАЦИЯ
            ========================================== */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.95);
-            padding: 10px 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            z-index: 100;
-        }
-
-        .nav-items {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: rgba(255,255,255,0.6);
-            font-size: 10px;
-            cursor: pointer;
-            padding: 5px;
-            transition: all 0.3s;
-        }
-
-        .nav-item.active,
-        .nav-item:hover {
-            color: #667eea;
-        }
-
-        .nav-icon {
-            font-size: 22px;
-        }
-
         @media (max-width: 768px) {
-            .mobile-nav {
-                display: block;
-            }
-
-            .lobby-container {
-                padding-bottom: 80px;
-            }
-
             .lobby-header {
                 flex-wrap: wrap;
                 gap: 10px;
             }
 
-            .user-balance {
+            .header-nav {
                 order: 3;
                 width: 100%;
                 justify-content: center;
             }
 
-            .left-column,
-            .right-column {
-                display: none;
+            .nav-tab {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .chats-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn-new-chat,
+            .btn-new-group {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .chat-header-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .party-members {
+                gap: 15px;
+            }
+
+            .party-member {
+                width: 100px;
+            }
+
+            .party-member-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
+            .voice-controls {
+                gap: 15px;
+            }
+
+            .voice-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
             }
         }
 
         /* ==========================================
            SCROLLBAR
            ========================================== */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <!-- Экран загрузки -->
+    <!-- Загрузка -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Загрузка...</div>
     </div>
 
     <!-- Главный контент -->
-    <div id="lobby-main" style="display: none;">
+    <div id="app" style="display: none;">
         
         <!-- Шапка -->
         <div class="lobby-header">
             <div class="logo">🎮 RuBlocks</div>
             
-            <div class="user-balance">
-                <div class="balance-item">
-                    <span>💰</span>
-                    <strong id="user-coins">0</strong>
-                </div>
-                <div class="balance-item">
-                    <span>💎</span>
-                    <strong id="user-gems">0</strong>
-                </div>
+            <div class="header-nav">
+                <button class="nav-tab active" onclick="showScreen('lobby')">🏠 Лобби</button>
+                <button class="nav-tab" onclick="showScreen('chats')" id="chats-tab">
+                    💬 Чаты
+                    <span class="badge" id="unread-badge" style="display: none;">0</span>
+                </button>
             </div>
 
             <div class="user-panel">
-                <img id="header-avatar" class="user-avatar" src="" alt="Avatar">
-                <div class="user-info-header">
-                    <span class="user-name" id="header-username">Загрузка...</span>
-                    <span class="user-level">⭐ Уровень <span id="header-level">1</span></span>
-                </div>
+                <div class="balance-item">💰 <strong id="user-coins">0</strong></div>
+                <div class="balance-item">💎 <strong id="user-gems">0</strong></div>
+                <img id="header-avatar" class="user-avatar" src="" alt="">
                 <button class="btn-logout" onclick="handleLogout()">Выход</button>
             </div>
         </div>
 
         <!-- ==========================================
-             CONNECTIONS - ГОРИЗОНТАЛЬНАЯ ЛИНИЯ
+             ЭКРАН ЛОББИ
              ========================================== -->
-        <div class="connections-section">
-            <div class="connections-header">
-                <span class="connections-title">🤝 Connections</span>
-                <span class="connections-count" id="connections-total">0 друзей</span>
-            </div>
+        <div class="screen active" id="screen-lobby">
             
-            <div class="connections-row">
-                <!-- Кнопка Add Connection (слева) -->
-                <div class="btn-add-connection" onclick="openAddConnection()">
-                    <span class="add-icon">➕</span>
-                    <span class="add-text">Add<br>Connection</span>
+            <!-- Connections -->
+            <div class="connections-section">
+                <div class="connections-header">
+                    <span class="connections-title">🤝 Connections</span>
+                    <span class="connections-count" id="connections-total">0 друзей</span>
                 </div>
                 
-                <!-- Список Connections (скролл вправо) -->
-                <div class="connections-scroll" id="connections-scroll">
-                    <!-- Connections будут добавлены сюда -->
-                    <div class="connections-empty" id="connections-empty">
-                        <span>👈 Добавьте друзей, чтобы они появились здесь</span>
+                <div class="connections-row">
+                    <div class="btn-add-connection" onclick="openAddConnection()">
+                        <span class="add-icon">➕</span>
+                        <span class="add-text">Add<br>Connection</span>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Контент лобби -->
-        <div class="lobby-container">
-            
-            <!-- Левая колонка - Профиль -->
-            <div class="left-column">
-                <div class="card profile-card">
-                    <img id="profile-avatar" class="profile-avatar" src="" alt="Avatar">
-                    <div class="profile-name" id="profile-name">Загрузка...</div>
-                    <div class="profile-email" id="profile-email">...</div>
                     
-                    <div class="profile-stats">
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-connections">0</div>
-                            <div class="stat-label">Connections</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-level">1</div>
-                            <div class="stat-label">Уровень</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-highscore">0</div>
-                            <div class="stat-label">Рекорд</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-playtime">0ч</div>
-                            <div class="stat-label">Время</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Магазин -->
-                <div class="card" style="margin-top: 20px;">
-                    <div class="card-header">
-                        <span class="card-title">🛒 Магазин</span>
-                    </div>
-                    <div class="shop-items">
-                        <div class="shop-item" onclick="buyItem('coins100')">
-                            <div class="shop-item-icon">💰</div>
-                            <div class="shop-item-name">100 монет</div>
-                            <div class="shop-item-price">💎 10</div>
-                        </div>
-                        <div class="shop-item" onclick="buyItem('skin1')">
-                            <div class="shop-item-icon">👕</div>
-                            <div class="shop-item-name">Скин #1</div>
-                            <div class="shop-item-price">💰 500</div>
-                        </div>
-                        <div class="shop-item" onclick="buyItem('boost')">
-                            <div class="shop-item-icon">⚡</div>
-                            <div class="shop-item-name">Буст x2</div>
-                            <div class="shop-item-price">💎 25</div>
-                        </div>
-                        <div class="shop-item" onclick="buyItem('vip')">
-                            <div class="shop-item-icon">👑</div>
-                            <div class="shop-item-name">VIP</div>
-                            <div class="shop-item-price">💎 100</div>
+                    <div class="connections-scroll" id="connections-scroll">
+                        <div class="connections-empty" id="connections-empty">
+                            👈 Добавьте друзей
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Центральная колонка - Чат -->
-            <div class="center-column">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">💬 Общий чат</span>
-                    </div>
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chat-messages">
-                            <div class="chat-message">
-                                <div class="chat-message-user">🤖 Система</div>
-                                <div class="chat-message-text">Добро пожаловать в RuBlocks!</div>
+            <!-- Контент -->
+            <div class="lobby-content">
+                <div class="profile-section">
+                    <div class="card profile-card">
+                        <img id="profile-avatar" class="profile-avatar" src="" alt="">
+                        <div class="profile-name" id="profile-name">Загрузка...</div>
+                        <div class="profile-email" id="profile-email">...</div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-box">
+                                <div class="stat-value" id="stat-connections">0</div>
+                                <div class="stat-label">Connections</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="stat-level">1</div>
+                                <div class="stat-label">Уровень</div>
                             </div>
                         </div>
-                        <div class="chat-input-container">
-                            <input type="text" class="chat-input" id="chat-input" placeholder="Сообщение..." maxlength="200">
-                            <button class="chat-send" onclick="sendMessage()">➤</button>
-                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Правая колонка - Онлайн -->
-            <div class="right-column">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">👥 Онлайн</span>
-                        <span id="online-count" style="color: #4ade80;">0</span>
-                    </div>
-                    <div class="players-list" id="players-list">
-                        <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">
-                            Загрузка...
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🛒 Магазин</span>
+                        </div>
+                        <div class="shop-items">
+                            <div class="shop-item" onclick="buyItem('coins')">
+                                <div class="shop-item-icon">💰</div>
+                                <div class="shop-item-name">100 монет</div>
+                                <div class="shop-item-price">💎 10</div>
+                            </div>
+                            <div class="shop-item" onclick="buyItem('vip')">
+                                <div class="shop-item-icon">👑</div>
+                                <div class="shop-item-name">VIP</div>
+                                <div class="shop-item-price">💎 100</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Мобильная навигация -->
-        <div class="mobile-nav">
-            <div class="nav-items">
-                <div class="nav-item active">
-                    <span class="nav-icon">🏠</span>
-                    <span>Главная</span>
+        <!-- ==========================================
+             ЭКРАН ЧАТОВ
+             ========================================== -->
+        <div class="screen" id="screen-chats">
+            <div class="chats-screen">
+                <div class="chats-header">
+                    <span class="chats-title">💬 Чаты</span>
+                    <div class="chats-actions">
+                        <button class="btn-new-chat" onclick="openNewChat()">
+                            ➕ Новый чат
+                        </button>
+                        <button class="btn-new-group" onclick="openNewGroup()">
+                            👥 Создать группу
+                        </button>
+                    </div>
                 </div>
-                <div class="nav-item">
-                    <span class="nav-icon">👤</span>
-                    <span>Профиль</span>
+
+                <div class="chats-list" id="chats-list">
+                    <div class="chats-empty" id="chats-empty">
+                        <div class="chats-empty-icon">💬</div>
+                        <h3>Нет чатов</h3>
+                        <p>Начните общение с друзьями!</p>
+                    </div>
                 </div>
-                <div class="nav-item">
-                    <span class="nav-icon">💬</span>
-                    <span>Чат</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ЭКРАН ПРИВАТНОГО ЧАТА
+             ========================================== -->
+        <div class="screen" id="screen-chat">
+            <div class="chat-screen">
+                <div class="chat-header">
+                    <button class="btn-back-chat" onclick="showScreen('chats')">← Назад</button>
+                    <img class="chat-header-avatar" id="chat-avatar" src="" alt="">
+                    <div class="chat-header-info">
+                        <div class="chat-header-name" id="chat-name">Чат</div>
+                        <div class="chat-header-status" id="chat-status">Онлайн</div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="btn-party" onclick="startParty()">
+                            🎉 Party
+                        </button>
+                    </div>
                 </div>
-                <div class="nav-item">
-                    <span class="nav-icon">🛒</span>
-                    <span>Магазин</span>
+
+                <div class="chat-messages-container" id="chat-messages">
+                    <!-- Сообщения -->
+                </div>
+
+                <div class="chat-input-section">
+                    <input type="text" class="chat-input" id="message-input" placeholder="Сообщение...">
+                    <button class="btn-send" onclick="sendChatMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             ЭКРАН PARTY
+             ========================================== -->
+        <div class="screen" id="screen-party">
+            <div class="party-screen">
+                <div class="party-header">
+                    <div class="party-title">
+                        <span class="party-title-icon">🎉</span>
+                        Party
+                    </div>
+                    <button class="btn-leave-party" onclick="leaveParty()">Покинуть</button>
+                </div>
+
+                <div class="party-content">
+                    <div class="party-members" id="party-members">
+                        <!-- Участники Party -->
+                    </div>
+
+                    <div class="voice-controls">
+                        <button class="voice-btn mic" id="btn-mic" onclick="toggleMic()">🎤</button>
+                        <button class="voice-btn deafen" id="btn-deafen" onclick="toggleDeafen()">🔊</button>
+                        <button class="voice-btn settings" onclick="showNotification('Настройки скоро!', 'info')">⚙️</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ==========================================
-         МОДАЛЬНОЕ ОКНО ADD CONNECTION
+         МОДАЛЬНЫЕ ОКНА
          ========================================== -->
-    <div class="modal" id="add-connection-modal">
+
+    <!-- Add Connection -->
+    <div class="modal" id="modal-add-connection">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title">➕ Add Connection</span>
-                <button class="modal-close" onclick="closeAddConnection()">×</button>
+                <button class="modal-close" onclick="closeModal('modal-add-connection')">×</button>
             </div>
-            
             <div class="input-group">
                 <label>🔍 Поиск по имени</label>
                 <input type="text" id="search-username" placeholder="Введите имя..." oninput="searchUsers()">
             </div>
-
-            <div class="search-results" id="search-results">
+            <div class="connection-select-list" id="search-results">
                 <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">
-                    Введите имя пользователя для поиска
+                    Введите имя для поиска
                 </p>
             </div>
+        </div>
+    </div>
+
+    <!-- New Chat -->
+    <div class="modal" id="modal-new-chat">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">💬 Новый чат</span>
+                <button class="modal-close" onclick="closeModal('modal-new-chat')">×</button>
+            </div>
+            <p style="margin-bottom: 15px; font-size: 14px; color: rgba(255,255,255,0.7);">
+                Выберите друга для чата:
+            </p>
+            <div class="connection-select-list" id="new-chat-connections">
+                <!-- Список друзей -->
+            </div>
+        </div>
+    </div>
+
+    <!-- New Group -->
+    <div class="modal" id="modal-new-group">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">👥 Создать группу</span>
+                <button class="modal-close" onclick="closeModal('modal-new-group')">×</button>
+            </div>
+            <div class="input-group">
+                <label>Название группы</label>
+                <input type="text" id="group-name" placeholder="Моя группа">
+            </div>
+            <p style="margin-bottom: 10px; font-size: 13px; color: rgba(255,255,255,0.7);">
+                Выберите участников:
+            </p>
+            <div class="connection-select-list" id="group-connections">
+                <!-- Список друзей с выбором -->
+            </div>
+            <button class="btn-primary" onclick="createGroup()">Создать группу</button>
         </div>
     </div>
 
@@ -1075,7 +1403,7 @@
 
     <script>
         // ==========================================
-        // Firebase Configuration
+        // Firebase
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyA76Du2jnVguJavcO7k6XFEQJ0tPhHF_UI",
@@ -1096,6 +1424,13 @@
         let currentUser = null;
         let userProfile = null;
         let connections = [];
+        let chats = [];
+        let currentChatId = null;
+        let currentChatData = null;
+        let partyMembers = [];
+        let isMicMuted = false;
+        let isDeafened = false;
+        let selectedGroupMembers = [];
 
         // ==========================================
         // ИНИЦИАЛИЗАЦИЯ
@@ -1104,94 +1439,88 @@
             if (user) {
                 currentUser = user;
                 await loadUserProfile();
-                initLobby();
+                initApp();
             } else {
                 window.location.href = '../index.html';
             }
         });
 
         async function loadUserProfile() {
-            try {
-                const doc = await db.collection('users').doc(currentUser.uid).get();
-                
-                if (doc.exists) {
-                    userProfile = doc.data();
-                } else {
-                    userProfile = {
-                        username: currentUser.displayName || currentUser.email.split('@')[0],
-                        email: currentUser.email,
-                        stats: { level: 1, coins: 100, gems: 10, highScore: 0, totalPlayTime: 0 },
-                        connections: [],
-                        connectionRequests: []
-                    };
-                    await db.collection('users').doc(currentUser.uid).set(userProfile);
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки профиля:', error);
+            const doc = await db.collection('users').doc(currentUser.uid).get();
+            if (doc.exists) {
+                userProfile = doc.data();
+            } else {
+                userProfile = {
+                    username: currentUser.displayName || currentUser.email.split('@')[0],
+                    email: currentUser.email,
+                    stats: { level: 1, coins: 100, gems: 10 },
+                    connections: []
+                };
+                await db.collection('users').doc(currentUser.uid).set(userProfile);
             }
         }
 
-        function initLobby() {
+        function initApp() {
             document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('lobby-main').style.display = 'block';
-
+            document.getElementById('app').style.display = 'block';
+            
             updateUI();
             loadConnections();
-            loadOnlinePlayers();
-            listenToChat();
+            loadChats();
             setOnlineStatus(true);
         }
 
         function updateUI() {
             const username = userProfile?.username || 'Игрок';
-            const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
+            const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
             const stats = userProfile?.stats || {};
 
-            document.getElementById('header-username').textContent = username;
-            document.getElementById('header-avatar').src = avatarUrl;
-            document.getElementById('header-level').textContent = stats.level || 1;
+            document.getElementById('header-avatar').src = avatar;
             document.getElementById('user-coins').textContent = stats.coins || 0;
             document.getElementById('user-gems').textContent = stats.gems || 0;
-
+            document.getElementById('profile-avatar').src = avatar;
             document.getElementById('profile-name').textContent = username;
             document.getElementById('profile-email').textContent = currentUser.email;
-            document.getElementById('profile-avatar').src = avatarUrl;
             document.getElementById('stat-connections').textContent = (userProfile?.connections || []).length;
             document.getElementById('stat-level').textContent = stats.level || 1;
-            document.getElementById('stat-highscore').textContent = stats.highScore || 0;
+        }
+
+        // ==========================================
+        // ЭКРАНЫ
+        // ==========================================
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             
-            const hours = Math.floor((stats.totalPlayTime || 0) / 3600);
-            document.getElementById('stat-playtime').textContent = hours + 'ч';
+            document.getElementById('screen-' + screen).classList.add('active');
+            
+            if (screen === 'lobby') {
+                document.querySelector('.nav-tab:nth-child(1)').classList.add('active');
+            } else if (screen === 'chats') {
+                document.querySelector('.nav-tab:nth-child(2)').classList.add('active');
+            }
         }
 
         // ==========================================
         // CONNECTIONS
         // ==========================================
         async function loadConnections() {
-            try {
-                const connectionIds = userProfile?.connections || [];
-                connections = [];
+            const ids = userProfile?.connections || [];
+            connections = [];
 
-                document.getElementById('connections-total').textContent = 
-                    connectionIds.length + ' ' + getWordForm(connectionIds.length, ['друг', 'друга', 'друзей']);
+            document.getElementById('connections-total').textContent = ids.length + ' друзей';
 
-                if (connectionIds.length === 0) {
-                    renderConnections();
-                    return;
-                }
-
-                for (const connId of connectionIds) {
-                    const doc = await db.collection('users').doc(connId).get();
-                    if (doc.exists) {
-                        connections.push({ id: doc.id, ...doc.data() });
-                    }
-                }
-
+            if (ids.length === 0) {
                 renderConnections();
-
-            } catch (error) {
-                console.error('Ошибка загрузки connections:', error);
+                return;
             }
+
+            for (const id of ids) {
+                const doc = await db.collection('users').doc(id).get();
+                if (doc.exists) connections.push({ id: doc.id, ...doc.data() });
+            }
+
+            renderConnections();
         }
 
         function renderConnections() {
@@ -1201,228 +1530,446 @@
             if (connections.length === 0) {
                 scroll.innerHTML = '';
                 scroll.appendChild(empty);
-                empty.style.display = 'flex';
+                empty.style.display = 'block';
                 return;
             }
 
             empty.style.display = 'none';
-            
-            scroll.innerHTML = connections.map(conn => {
-                const avatar = conn.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${conn.id}`;
-                const statusClass = conn.isOnline ? 'online' : 'offline';
-
+            scroll.innerHTML = connections.map(c => {
+                const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${c.id}`;
+                const status = c.isOnline ? 'online' : 'offline';
                 return `
-                    <div class="connection-card" onclick="viewConnection('${conn.id}')">
+                    <div class="connection-card" onclick="startChatWith('${c.id}')">
                         <div class="connection-avatar-container">
-                            <img class="connection-avatar" src="${avatar}" alt="">
-                            <div class="connection-status-dot ${statusClass}"></div>
+                            <img class="connection-avatar" src="${avatar}">
+                            <div class="connection-status-dot ${status}"></div>
                         </div>
-                        <div class="connection-name">${escapeHtml(conn.username || 'Игрок')}</div>
+                        <div class="connection-name">${escapeHtml(c.username || 'Игрок')}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function viewConnection(userId) {
-            const conn = connections.find(c => c.id === userId);
-            if (conn) {
-                const status = conn.isOnline ? '🟢 Онлайн' : '⚫ Офлайн';
-                showNotification(`${conn.username}\n${status}\n⭐ Уровень ${conn.stats?.level || 1}`, 'info');
-            }
-        }
-
-        // ==========================================
-        // ADD CONNECTION
-        // ==========================================
         function openAddConnection() {
-            document.getElementById('add-connection-modal').classList.add('show');
+            document.getElementById('modal-add-connection').classList.add('show');
             document.getElementById('search-username').value = '';
-            document.getElementById('search-results').innerHTML = 
-                '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Введите имя для поиска</p>';
-        }
-
-        function closeAddConnection() {
-            document.getElementById('add-connection-modal').classList.remove('show');
+            document.getElementById('search-results').innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px;">Введите имя</p>';
         }
 
         let searchTimeout;
         async function searchUsers() {
-            const query = document.getElementById('search-username').value.trim().toLowerCase();
+            const q = document.getElementById('search-username').value.trim().toLowerCase();
             const results = document.getElementById('search-results');
 
-            if (query.length < 2) {
-                results.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Минимум 2 символа</p>';
+            if (q.length < 2) {
+                results.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px;">Минимум 2 символа</p>';
                 return;
             }
 
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(async () => {
-                try {
-                    results.innerHTML = '<div class="loading-spinner" style="width:30px;height:30px;margin:20px auto;"></div>';
+                results.innerHTML = '<div class="loading-spinner" style="width:30px;height:30px;margin:20px auto;"></div>';
+                
+                const snapshot = await db.collection('users').limit(30).get();
+                let found = [];
 
-                    const snapshot = await db.collection('users').limit(30).get();
-                    let found = [];
-
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const username = (data.username || '').toLowerCase();
-                        
-                        if (doc.id !== currentUser.uid && 
-                            username.includes(query) &&
-                            !(userProfile?.connections || []).includes(doc.id)) {
-                            found.push({ id: doc.id, ...data });
-                        }
-                    });
-
-                    if (found.length === 0) {
-                        results.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Не найдено</p>';
-                        return;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (doc.id !== currentUser.uid && 
+                        (data.username || '').toLowerCase().includes(q) &&
+                        !(userProfile?.connections || []).includes(doc.id)) {
+                        found.push({ id: doc.id, ...data });
                     }
+                });
 
-                    results.innerHTML = found.slice(0, 10).map(user => {
-                        const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`;
-                        return `
-                            <div class="search-result-item">
-                                <img class="search-result-avatar" src="${avatar}" alt="">
-                                <div class="search-result-info">
-                                    <div class="search-result-name">${escapeHtml(user.username || 'Игрок')}</div>
-                                    <div class="search-result-level">⭐ Уровень ${user.stats?.level || 1}</div>
-                                </div>
-                                <button class="btn-add" onclick="sendRequest('${user.id}', '${escapeHtml(user.username)}')">➕ Добавить</button>
-                            </div>
-                        `;
-                    }).join('');
-
-                } catch (error) {
-                    results.innerHTML = '<p style="color: #e74c3c; text-align: center;">Ошибка поиска</p>';
+                if (found.length === 0) {
+                    results.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px;">Не найдено</p>';
+                    return;
                 }
+
+                results.innerHTML = found.slice(0, 10).map(u => `
+                    <div class="connection-select-item" onclick="sendRequest('${u.id}', '${escapeHtml(u.username)}')">
+                        <img class="connection-select-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}">
+                        <span class="connection-select-name">${escapeHtml(u.username || 'Игрок')}</span>
+                        <span style="color:#4ade80;">➕</span>
+                    </div>
+                `).join('');
             }, 500);
         }
 
-        async function sendRequest(userId, username) {
-            try {
-                await db.collection('users').doc(userId).update({
-                    connectionRequests: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-                });
-
-                showNotification(`✅ Запрос отправлен ${username}`, 'success');
-                closeAddConnection();
-            } catch (error) {
-                showNotification('❌ Ошибка', 'error');
-            }
+        async function sendRequest(id, name) {
+            await db.collection('users').doc(id).update({
+                connectionRequests: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            });
+            showNotification('✅ Запрос отправлен ' + name, 'success');
+            closeModal('modal-add-connection');
         }
 
         // ==========================================
-        // ОНЛАЙН ИГРОКИ
+        // ЧАТЫ
         // ==========================================
-        async function loadOnlinePlayers() {
-            try {
-                const snapshot = await db.collection('users').limit(30).get();
-                const list = document.getElementById('players-list');
-                let onlineCount = 0;
-                let html = '';
-
-                snapshot.forEach(doc => {
-                    const player = doc.data();
-                    if (player.isOnline && doc.id !== currentUser.uid) {
-                        onlineCount++;
-                        const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${doc.id}`;
-                        html += `
-                            <div class="player-item" onclick="viewPlayer('${doc.id}', '${escapeHtml(player.username)}')">
-                                <img class="player-avatar-small" src="${avatar}" alt="">
-                                <div class="player-info">
-                                    <div class="player-name">${escapeHtml(player.username || 'Игрок')}</div>
-                                    <div class="player-status">🟢 В сети</div>
-                                </div>
-                                <div class="online-dot"></div>
-                            </div>
-                        `;
-                    }
-                });
-
-                document.getElementById('online-count').textContent = onlineCount;
-                list.innerHTML = html || '<p style="text-align:center;padding:20px;color:rgba(255,255,255,0.5);">Никого нет</p>';
-
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
-        }
-
-        function viewPlayer(id, name) {
-            const isConn = (userProfile?.connections || []).includes(id);
-            showNotification(`${name}\n${isConn ? '✅ В Connections' : ''}`, 'info');
-        }
-
-        async function setOnlineStatus(status) {
-            try {
-                await db.collection('users').doc(currentUser.uid).update({
-                    isOnline: status,
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (e) {}
-        }
-
-        // ==========================================
-        // ЧАТ
-        // ==========================================
-        function listenToChat() {
-            db.collection('chat').orderBy('timestamp', 'desc').limit(50)
+        async function loadChats() {
+            db.collection('chats')
+                .where('members', 'array-contains', currentUser.uid)
+                .orderBy('lastMessageTime', 'desc')
                 .onSnapshot(snapshot => {
-                    const messages = [];
-                    snapshot.forEach(doc => messages.push(doc.data()));
-                    renderChat(messages.reverse());
-                }, error => {});
+                    chats = [];
+                    snapshot.forEach(doc => chats.push({ id: doc.id, ...doc.data() }));
+                    renderChats();
+                });
         }
 
-        function renderChat(messages) {
-            const el = document.getElementById('chat-messages');
-            if (!messages.length) {
-                el.innerHTML = '<div class="chat-message"><div class="chat-message-user">🤖 Система</div><div class="chat-message-text">Чат пуст</div></div>';
+        async function renderChats() {
+            const list = document.getElementById('chats-list');
+            const empty = document.getElementById('chats-empty');
+
+            if (chats.length === 0) {
+                list.innerHTML = '';
+                list.appendChild(empty);
+                empty.style.display = 'block';
                 return;
             }
-            
-            el.innerHTML = messages.map(m => `
-                <div class="chat-message">
-                    <div class="chat-message-user">${escapeHtml(m.username || 'Аноним')}</div>
-                    <div class="chat-message-text">${escapeHtml(m.text || '')}</div>
-                    <div class="chat-message-time">${formatTime(m.timestamp)}</div>
-                </div>
-            `).join('');
-            el.scrollTop = el.scrollHeight;
+
+            empty.style.display = 'none';
+            let html = '';
+
+            for (const chat of chats) {
+                let avatar, name, status;
+
+                if (chat.isGroup) {
+                    avatar = `<div class="chat-avatar group">👥</div>`;
+                    name = chat.name || 'Группа';
+                    status = `${chat.members.length} участников`;
+                } else {
+                    const otherId = chat.members.find(m => m !== currentUser.uid);
+                    const otherDoc = await db.collection('users').doc(otherId).get();
+                    const other = otherDoc.data() || {};
+                    avatar = `<img class="chat-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${otherId}">`;
+                    name = other.username || 'Пользователь';
+                    status = other.isOnline ? '🟢 Онлайн' : '';
+                }
+
+                html += `
+                    <div class="chat-item" onclick="openChat('${chat.id}')">
+                        ${avatar}
+                        <div class="chat-info">
+                            <div class="chat-name">${escapeHtml(name)}</div>
+                            <div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Нет сообщений')}</div>
+                        </div>
+                        <div class="chat-meta">
+                            <div class="chat-time">${formatTime(chat.lastMessageTime)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            list.innerHTML = html;
         }
 
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
+        function openNewChat() {
+            const list = document.getElementById('new-chat-connections');
+            
+            if (connections.length === 0) {
+                list.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px;">Сначала добавьте друзей</p>';
+            } else {
+                list.innerHTML = connections.map(c => `
+                    <div class="connection-select-item" onclick="startChatWith('${c.id}')">
+                        <img class="connection-select-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${c.id}">
+                        <span class="connection-select-name">${escapeHtml(c.username || 'Игрок')}</span>
+                        <span style="color:#667eea;">💬</span>
+                    </div>
+                `).join('');
+            }
 
-            try {
-                await db.collection('chat').add({
-                    userId: currentUser.uid,
-                    username: userProfile?.username || 'Игрок',
-                    text: text,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                input.value = '';
-            } catch (e) {
-                showNotification('Ошибка', 'error');
+            document.getElementById('modal-new-chat').classList.add('show');
+        }
+
+        async function startChatWith(userId) {
+            closeModal('modal-new-chat');
+            
+            // Проверяем существует ли чат
+            const existing = chats.find(c => 
+                !c.isGroup && 
+                c.members.includes(userId) && 
+                c.members.includes(currentUser.uid)
+            );
+
+            if (existing) {
+                openChat(existing.id);
+                return;
+            }
+
+            // Создаём новый чат
+            const chatRef = await db.collection('chats').add({
+                members: [currentUser.uid, userId],
+                isGroup: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessage: '',
+                lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            openChat(chatRef.id);
+        }
+
+        function openNewGroup() {
+            selectedGroupMembers = [];
+            document.getElementById('group-name').value = '';
+            
+            const list = document.getElementById('group-connections');
+            
+            if (connections.length === 0) {
+                list.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:20px;">Сначала добавьте друзей</p>';
+            } else {
+                list.innerHTML = connections.map(c => `
+                    <div class="connection-select-item" id="group-member-${c.id}" onclick="toggleGroupMember('${c.id}')">
+                        <img class="connection-select-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${c.id}">
+                        <span class="connection-select-name">${escapeHtml(c.username || 'Игрок')}</span>
+                        <span class="connection-select-check" style="display:none;">✓</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('modal-new-group').classList.add('show');
+        }
+
+        function toggleGroupMember(id) {
+            const el = document.getElementById('group-member-' + id);
+            const check = el.querySelector('.connection-select-check');
+            
+            if (selectedGroupMembers.includes(id)) {
+                selectedGroupMembers = selectedGroupMembers.filter(m => m !== id);
+                el.classList.remove('selected');
+                check.style.display = 'none';
+            } else {
+                selectedGroupMembers.push(id);
+                el.classList.add('selected');
+                check.style.display = 'block';
             }
         }
 
-        document.getElementById('chat-input').addEventListener('keypress', e => {
-            if (e.key === 'Enter') sendMessage();
+        async function createGroup() {
+            const name = document.getElementById('group-name').value.trim() || 'Группа';
+            
+            if (selectedGroupMembers.length === 0) {
+                showNotification('Выберите участников', 'error');
+                return;
+            }
+
+            const members = [currentUser.uid, ...selectedGroupMembers];
+
+            const chatRef = await db.collection('chats').add({
+                members: members,
+                isGroup: true,
+                name: name,
+                createdBy: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessage: 'Группа создана',
+                lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            closeModal('modal-new-group');
+            showNotification('✅ Группа создана!', 'success');
+            openChat(chatRef.id);
+        }
+
+        async function openChat(chatId) {
+            currentChatId = chatId;
+            
+            const chatDoc = await db.collection('chats').doc(chatId).get();
+            currentChatData = { id: chatDoc.id, ...chatDoc.data() };
+
+            // Обновляем заголовок
+            const avatar = document.getElementById('chat-avatar');
+            const name = document.getElementById('chat-name');
+            const status = document.getElementById('chat-status');
+
+            if (currentChatData.isGroup) {
+                avatar.className = 'chat-header-avatar group';
+                avatar.innerHTML = '👥';
+                avatar.src = '';
+                name.textContent = currentChatData.name || 'Группа';
+                status.textContent = currentChatData.members.length + ' участников';
+            } else {
+                const otherId = currentChatData.members.find(m => m !== currentUser.uid);
+                const otherDoc = await db.collection('users').doc(otherId).get();
+                const other = otherDoc.data() || {};
+                
+                avatar.className = 'chat-header-avatar';
+                avatar.innerHTML = '';
+                avatar.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${otherId}`;
+                name.textContent = other.username || 'Пользователь';
+                status.textContent = other.isOnline ? '🟢 Онлайн' : '⚫ Офлайн';
+            }
+
+            // Слушаем сообщения
+            db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp')
+                .onSnapshot(snapshot => {
+                    const messages = [];
+                    snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data() }));
+                    renderMessages(messages);
+                });
+
+            showScreen('chat');
+        }
+
+        async function renderMessages(messages) {
+            const container = document.getElementById('chat-messages');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:50px;color:rgba(255,255,255,0.4);">Нет сообщений</p>';
+                return;
+            }
+
+            let html = '';
+            for (const msg of messages) {
+                const isOwn = msg.senderId === currentUser.uid;
+                const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.senderId}`;
+                
+                html += `
+                    <div class="message ${isOwn ? 'own' : ''}">
+                        <img class="message-avatar" src="${avatar}">
+                        <div class="message-content">
+                            ${!isOwn && currentChatData.isGroup ? `<div class="message-sender">${escapeHtml(msg.senderName || '')}</div>` : ''}
+                            <div class="message-bubble">
+                                <div class="message-text">${escapeHtml(msg.text)}</div>
+                            </div>
+                            <div class="message-time">${formatTime(msg.timestamp)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text || !currentChatId) return;
+
+            await db.collection('chats').doc(currentChatId).collection('messages').add({
+                senderId: currentUser.uid,
+                senderName: userProfile?.username || 'Игрок',
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await db.collection('chats').doc(currentChatId).update({
+                lastMessage: text,
+                lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            input.value = '';
+        }
+
+        document.getElementById('message-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') sendChatMessage();
         });
 
         // ==========================================
-        // МАГАЗИН
+        // PARTY
         // ==========================================
-        function buyItem(id) {
-            showNotification('🛒 Магазин скоро будет доступен!', 'info');
+        async function startParty() {
+            if (!currentChatData) return;
+
+            partyMembers = [];
+            
+            // Добавляем себя
+            partyMembers.push({
+                id: currentUser.uid,
+                name: userProfile?.username || 'Я',
+                isSpeaking: false,
+                isMuted: false
+            });
+
+            // Добавляем участников чата
+            for (const memberId of currentChatData.members) {
+                if (memberId !== currentUser.uid) {
+                    const doc = await db.collection('users').doc(memberId).get();
+                    const data = doc.data() || {};
+                    partyMembers.push({
+                        id: memberId,
+                        name: data.username || 'Игрок',
+                        isSpeaking: false,
+                        isMuted: true
+                    });
+                }
+            }
+
+            renderParty();
+            showScreen('party');
+            
+            showNotification('🎉 Party начата! Включите микрофон', 'success');
+        }
+
+        function renderParty() {
+            const container = document.getElementById('party-members');
+            
+            container.innerHTML = partyMembers.map(m => {
+                const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${m.id}`;
+                const speakingClass = m.isSpeaking ? 'speaking' : '';
+                const micIcon = m.isMuted ? '🔇' : '🎤';
+                
+                return `
+                    <div class="party-member">
+                        <img class="party-member-avatar ${speakingClass}" src="${avatar}">
+                        <div class="party-member-name">${escapeHtml(m.name)}</div>
+                        <div class="party-member-mic">${micIcon}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleMic() {
+            isMicMuted = !isMicMuted;
+            const btn = document.getElementById('btn-mic');
+            
+            if (isMicMuted) {
+                btn.classList.add('muted');
+                btn.textContent = '🔇';
+                showNotification('🔇 Микрофон выключен', 'info');
+            } else {
+                btn.classList.remove('muted');
+                btn.textContent = '🎤';
+                showNotification('🎤 Микрофон включен', 'success');
+            }
+
+            // Обновляем себя в списке
+            const me = partyMembers.find(m => m.id === currentUser.uid);
+            if (me) me.isMuted = isMicMuted;
+            renderParty();
+        }
+
+        function toggleDeafen() {
+            isDeafened = !isDeafened;
+            const btn = document.getElementById('btn-deafen');
+            
+            if (isDeafened) {
+                btn.classList.add('active');
+                btn.textContent = '🔈';
+                showNotification('🔈 Звук выключен', 'info');
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🔊';
+                showNotification('🔊 Звук включен', 'success');
+            }
+        }
+
+        function leaveParty() {
+            showScreen('chat');
+            showNotification('Вы покинули Party', 'info');
         }
 
         // ==========================================
         // УТИЛИТЫ
         // ==========================================
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1435,26 +1982,25 @@
             return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         }
 
-        function getWordForm(n, forms) {
-            n = Math.abs(n) % 100;
-            const n1 = n % 10;
-            if (n > 10 && n < 20) return forms[2];
-            if (n1 > 1 && n1 < 5) return forms[1];
-            if (n1 === 1) return forms[0];
-            return forms[2];
-        }
-
         function showNotification(msg, type = 'success') {
             const el = document.createElement('div');
-            el.className = `notification ${type}`;
-            el.innerHTML = msg.replace(/\n/g, '<br>');
+            el.className = 'notification ' + type;
+            el.textContent = msg;
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 3500);
         }
 
-        // ==========================================
-        // ВЫХОД
-        // ==========================================
+        function buyItem(id) {
+            showNotification('🛒 Магазин скоро!', 'info');
+        }
+
+        async function setOnlineStatus(status) {
+            await db.collection('users').doc(currentUser.uid).update({
+                isOnline: status,
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(() => {});
+        }
+
         async function handleLogout() {
             if (confirm('Выйти?')) {
                 await setOnlineStatus(false);
@@ -1463,7 +2009,6 @@
         }
 
         window.addEventListener('beforeunload', () => setOnlineStatus(false));
-        setInterval(loadOnlinePlayers, 30000);
     </script>
 </body>
 </html>
