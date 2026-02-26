@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="RuBlocks - Русский Roblox. Играй, создавай, общайся!">
     <title>RuBlocks - Лобби</title>
     <style>
         * {
@@ -60,18 +58,12 @@
             font-weight: 600;
         }
 
-        .loading-subtext {
-            margin-top: 10px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.6);
-        }
-
         /* ==========================================
            ШАПКА
            ========================================== */
         .lobby-header {
             background: rgba(0, 0, 0, 0.5);
-            padding: 15px 30px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -80,11 +72,10 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -99,18 +90,11 @@
         }
 
         .user-avatar {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 3px solid #667eea;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+            border: 2px solid #667eea;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
         }
 
         .user-info-header {
@@ -120,18 +104,18 @@
 
         .user-name {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .user-level {
-            font-size: 12px;
+            font-size: 11px;
             color: #ffd700;
         }
 
         .user-balance {
             display: flex;
-            gap: 15px;
-            font-size: 14px;
+            gap: 10px;
+            font-size: 13px;
         }
 
         .balance-item {
@@ -139,32 +123,180 @@
             align-items: center;
             gap: 5px;
             background: rgba(255,255,255,0.1);
-            padding: 6px 15px;
-            border-radius: 20px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .balance-item:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.05);
+            padding: 5px 12px;
+            border-radius: 15px;
         }
 
         .btn-logout {
-            padding: 10px 25px;
+            padding: 8px 18px;
             background: #e74c3c;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 13px;
             transition: all 0.3s;
-            font-size: 14px;
         }
 
         .btn-logout:hover {
             background: #c0392b;
+        }
+
+        /* ==========================================
+           CONNECTIONS - ГОРИЗОНТАЛЬНАЯ ЛИНИЯ
+           ========================================== */
+        .connections-section {
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .connections-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .connections-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .connections-count {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .connections-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Кнопка Add Connections */
+        .btn-add-connection {
+            flex-shrink: 0;
+            width: 70px;
+            height: 90px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add-connection:hover {
+            background: rgba(102, 126, 234, 0.3);
             transform: scale(1.05);
+        }
+
+        .btn-add-connection .add-icon {
+            font-size: 28px;
+        }
+
+        .btn-add-connection .add-text {
+            font-size: 10px;
+            font-weight: 600;
+            color: #667eea;
+            text-align: center;
+        }
+
+        /* Контейнер скролла Connections */
+        .connections-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 5px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .connections-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .connections-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .connections-scroll::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        /* Карточка Connection */
+        .connection-card {
+            flex-shrink: 0;
+            width: 70px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .connection-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .connection-avatar-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 8px;
+        }
+
+        .connection-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #667eea;
+            object-fit: cover;
+        }
+
+        .connection-status-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #1a1a2e;
+        }
+
+        .connection-status-dot.online {
+            background: #4ade80;
+        }
+
+        .connection-status-dot.offline {
+            background: #6b7280;
+        }
+
+        .connection-name {
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70px;
+        }
+
+        /* Пустое состояние */
+        .connections-empty {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
         }
 
         /* ==========================================
@@ -181,13 +313,13 @@
 
         @media (min-width: 768px) {
             .lobby-container {
-                grid-template-columns: 350px 1fr;
+                grid-template-columns: 300px 1fr;
             }
         }
 
         @media (min-width: 1200px) {
             .lobby-container {
-                grid-template-columns: 350px 1fr 350px;
+                grid-template-columns: 300px 1fr 300px;
             }
         }
 
@@ -204,8 +336,7 @@
         }
 
         .card:hover {
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .card-header {
@@ -218,7 +349,7 @@
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #667eea;
         }
@@ -231,117 +362,48 @@
         }
 
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            border: 5px solid #667eea;
+            border: 4px solid #667eea;
             margin-bottom: 15px;
-            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
         .profile-name {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
         .profile-email {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 15px;
         }
 
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
         }
 
         .stat-box {
             background: rgba(102, 126, 234, 0.2);
-            padding: 15px 10px;
-            border-radius: 12px;
+            padding: 12px 8px;
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.3s;
-            cursor: default;
-        }
-
-        .stat-box:hover {
-            background: rgba(102, 126, 234, 0.3);
-            transform: translateY(-3px);
         }
 
         .stat-value {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: bold;
             color: #ffd700;
         }
 
         .stat-label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.7);
-            margin-top: 5px;
-        }
-
-        /* ==========================================
-           ОНЛАЙН ИГРОКИ
-           ========================================== */
-        .players-list {
-            max-height: 450px;
-            overflow-y: auto;
-        }
-
-        .player-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.05);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .player-item:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-
-        .player-avatar-small {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid #4ade80;
-        }
-
-        .player-info {
-            flex: 1;
-        }
-
-        .player-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .player-status {
-            font-size: 11px;
-            color: #4ade80;
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
             margin-top: 3px;
-        }
-
-        .online-dot {
-            width: 10px;
-            height: 10px;
-            background: #4ade80;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.9); }
         }
 
         /* ==========================================
@@ -358,34 +420,34 @@
             overflow-y: auto;
             padding: 15px;
             background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            margin-bottom: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
         .chat-message {
             margin-bottom: 12px;
-            padding: 10px 14px;
+            padding: 10px 12px;
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            border-radius: 8px;
             border-left: 3px solid #667eea;
         }
 
         .chat-message-user {
             font-weight: bold;
             color: #667eea;
-            font-size: 13px;
+            font-size: 12px;
             margin-bottom: 4px;
         }
 
         .chat-message-text {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
         }
 
         .chat-message-time {
             font-size: 10px;
             color: rgba(255,255,255,0.4);
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .chat-input-container {
@@ -395,13 +457,12 @@
 
         .chat-input {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
             color: white;
             font-size: 14px;
-            transition: all 0.3s;
         }
 
         .chat-input::placeholder {
@@ -411,11 +472,10 @@
         .chat-input:focus {
             outline: none;
             border-color: #667eea;
-            background: rgba(255,255,255,0.15);
         }
 
         .chat-send {
-            padding: 14px 25px;
+            padding: 12px 20px;
             background: #667eea;
             border: none;
             border-radius: 10px;
@@ -427,7 +487,64 @@
 
         .chat-send:hover {
             background: #764ba2;
-            transform: scale(1.05);
+        }
+
+        /* ==========================================
+           ОНЛАЙН ИГРОКИ
+           ========================================== */
+        .players-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .player-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .player-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .player-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #4ade80;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .player-status {
+            font-size: 11px;
+            color: #4ade80;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* ==========================================
@@ -436,13 +553,13 @@
         .shop-items {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .shop-item {
             background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 18px;
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -451,250 +568,23 @@
 
         .shop-item:hover {
             border-color: #ffd700;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
         }
 
         .shop-item-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-        }
-
-        .shop-item-name {
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 32px;
             margin-bottom: 8px;
         }
 
-        .shop-item-price {
-            font-size: 13px;
-            color: #ffd700;
-            font-weight: 600;
-        }
-
-        /* ==========================================
-           CONNECTIONS (ДРУЗЬЯ)
-           ========================================== */
-        .connections-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            z-index: 200;
-            overflow-y: auto;
-        }
-
-        .connections-screen.show {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .connections-header {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 201;
-        }
-
-        .connections-title-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .connections-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .btn-add-connection {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-add-connection:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(74, 222, 128, 0.4);
-        }
-
-        .btn-back {
-            padding: 10px 25px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .btn-back:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .connections-content {
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .connections-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .connections-tab {
-            padding: 12px 25px;
-            background: rgba(255,255,255,0.05);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .connections-tab.active {
-            background: #667eea;
-        }
-
-        .connections-tab:hover:not(.active) {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .connections-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .connection-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            transition: all 0.3s;
-        }
-
-        .connection-item:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-
-        .connection-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 3px solid #667eea;
-        }
-
-        .connection-info {
-            flex: 1;
-        }
-
-        .connection-name {
-            font-size: 18px;
+        .shop-item-name {
+            font-size: 12px;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
-        .connection-status {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .connection-status.online {
-            color: #4ade80;
-        }
-
-        .connection-status.offline {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .connection-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-connection-action {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 13px;
-        }
-
-        .btn-message {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-message:hover {
-            background: #764ba2;
-        }
-
-        .btn-remove {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        .btn-remove:hover {
-            background: #e74c3c;
-        }
-
-        .empty-connections {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .empty-connections-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .empty-connections h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .empty-connections p {
-            font-size: 14px;
-            margin-bottom: 30px;
+        .shop-item-price {
+            font-size: 11px;
+            color: #ffd700;
         }
 
         /* ==========================================
@@ -719,14 +609,19 @@
             animation: fadeIn 0.3s;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .modal-content {
             background: #1a1a2e;
-            padding: 35px;
+            padding: 30px;
             border-radius: 20px;
-            max-width: 500px;
+            max-width: 450px;
             width: 90%;
             border: 1px solid rgba(255,255,255,0.1);
-            animation: modalIn 0.4s;
+            animation: modalIn 0.3s;
         }
 
         @keyframes modalIn {
@@ -744,11 +639,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .modal-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #667eea;
         }
@@ -757,46 +652,40 @@
             background: none;
             border: none;
             color: white;
-            font-size: 32px;
+            font-size: 28px;
             cursor: pointer;
-            transition: all 0.3s;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            transition: all 0.3s;
         }
 
         .modal-close:hover {
             background: rgba(255,255,255,0.1);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .input-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: rgba(255,255,255,0.9);
+            font-size: 14px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
             color: white;
-            font-size: 16px;
-            transition: all 0.3s;
+            font-size: 14px;
         }
 
         .input-group input::placeholder {
@@ -808,36 +697,19 @@
             border-color: #667eea;
         }
 
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
         .search-results {
-            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .search-result-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px;
+            gap: 12px;
+            padding: 12px;
             background: rgba(255,255,255,0.05);
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: all 0.3s;
         }
 
@@ -846,8 +718,8 @@
         }
 
         .search-result-avatar {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             border: 2px solid #667eea;
         }
@@ -858,22 +730,23 @@
 
         .search-result-name {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .search-result-level {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255,255,255,0.6);
         }
 
         .btn-add {
-            padding: 10px 20px;
+            padding: 8px 16px;
             background: #4ade80;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 12px;
             transition: all 0.3s;
         }
 
@@ -886,39 +759,24 @@
            ========================================== */
         .notification {
             position: fixed;
-            top: 90px;
+            top: 80px;
             right: 20px;
             background: #1a1a2e;
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 18px 25px;
+            border-radius: 10px;
+            padding: 15px 20px;
             z-index: 1000;
-            animation: slideIn 0.4s;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s;
+            max-width: 300px;
         }
 
-        .notification.success {
-            border-left: 5px solid #4ade80;
-        }
-
-        .notification.error {
-            border-left: 5px solid #e74c3c;
-        }
-
-        .notification.info {
-            border-left: 5px solid #667eea;
-        }
+        .notification.success { border-left: 4px solid #4ade80; }
+        .notification.error { border-left: 4px solid #e74c3c; }
+        .notification.info { border-left: 4px solid #667eea; }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         /* ==========================================
@@ -931,8 +789,7 @@
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 12px 20px;
+            padding: 10px 15px;
             border-top: 1px solid rgba(255,255,255,0.1);
             z-index: 100;
         }
@@ -946,24 +803,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
+            padding: 5px;
             transition: all 0.3s;
-            padding: 8px;
-            border-radius: 8px;
         }
 
         .nav-item.active,
         .nav-item:hover {
             color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
         }
 
         .nav-icon {
-            font-size: 24px;
+            font-size: 22px;
         }
 
         @media (max-width: 768px) {
@@ -972,13 +826,12 @@
             }
 
             .lobby-container {
-                padding-bottom: 90px;
+                padding-bottom: 80px;
             }
 
             .lobby-header {
                 flex-wrap: wrap;
-                gap: 12px;
-                padding: 12px 15px;
+                gap: 10px;
             }
 
             .user-balance {
@@ -991,28 +844,13 @@
             .right-column {
                 display: none;
             }
-
-            .connections-header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-
-            .connections-title-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .connections-tabs {
-                flex-wrap: wrap;
-            }
         }
 
         /* ==========================================
            SCROLLBAR
            ========================================== */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -1024,18 +862,13 @@
             background: #667eea;
             border-radius: 10px;
         }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #764ba2;
-        }
     </style>
 </head>
 <body>
     <!-- Экран загрузки -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Загрузка лобби...</div>
-        <div class="loading-subtext">Подключение к серверу</div>
+        <div class="loading-text">Загрузка...</div>
     </div>
 
     <!-- Главный контент -->
@@ -1046,18 +879,18 @@
             <div class="logo">🎮 RuBlocks</div>
             
             <div class="user-balance">
-                <div class="balance-item" title="Монеты">
+                <div class="balance-item">
                     <span>💰</span>
                     <strong id="user-coins">0</strong>
                 </div>
-                <div class="balance-item" title="Гемы">
+                <div class="balance-item">
                     <span>💎</span>
                     <strong id="user-gems">0</strong>
                 </div>
             </div>
 
             <div class="user-panel">
-                <img id="header-avatar" class="user-avatar" src="" alt="Avatar" title="Ваш профиль">
+                <img id="header-avatar" class="user-avatar" src="" alt="Avatar">
                 <div class="user-info-header">
                     <span class="user-name" id="header-username">Загрузка...</span>
                     <span class="user-level">⭐ Уровень <span id="header-level">1</span></span>
@@ -1066,12 +899,37 @@
             </div>
         </div>
 
+        <!-- ==========================================
+             CONNECTIONS - ГОРИЗОНТАЛЬНАЯ ЛИНИЯ
+             ========================================== -->
+        <div class="connections-section">
+            <div class="connections-header">
+                <span class="connections-title">🤝 Connections</span>
+                <span class="connections-count" id="connections-total">0 друзей</span>
+            </div>
+            
+            <div class="connections-row">
+                <!-- Кнопка Add Connection (слева) -->
+                <div class="btn-add-connection" onclick="openAddConnection()">
+                    <span class="add-icon">➕</span>
+                    <span class="add-text">Add<br>Connection</span>
+                </div>
+                
+                <!-- Список Connections (скролл вправо) -->
+                <div class="connections-scroll" id="connections-scroll">
+                    <!-- Connections будут добавлены сюда -->
+                    <div class="connections-empty" id="connections-empty">
+                        <span>👈 Добавьте друзей, чтобы они появились здесь</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Контент лобби -->
         <div class="lobby-container">
             
             <!-- Левая колонка - Профиль -->
             <div class="left-column">
-                <!-- Профиль -->
                 <div class="card profile-card">
                     <img id="profile-avatar" class="profile-avatar" src="" alt="Avatar">
                     <div class="profile-name" id="profile-name">Загрузка...</div>
@@ -1092,7 +950,7 @@
                         </div>
                         <div class="stat-box">
                             <div class="stat-value" id="stat-playtime">0ч</div>
-                            <div class="stat-label">Время в игре</div>
+                            <div class="stat-label">Время</div>
                         </div>
                     </div>
                 </div>
@@ -1133,65 +991,53 @@
                     <div class="card-header">
                         <span class="card-title">💬 Общий чат</span>
                     </div>
-                    <div class="chat-container" style="height: 500px;">
+                    <div class="chat-container">
                         <div class="chat-messages" id="chat-messages">
                             <div class="chat-message">
                                 <div class="chat-message-user">🤖 Система</div>
-                                <div class="chat-message-text">Добро пожаловать в RuBlocks! 🎮</div>
-                                <div class="chat-message-time">Сейчас</div>
+                                <div class="chat-message-text">Добро пожаловать в RuBlocks!</div>
                             </div>
                         </div>
                         <div class="chat-input-container">
-                            <input 
-                                type="text" 
-                                class="chat-input" 
-                                id="chat-input" 
-                                placeholder="Написать сообщение..." 
-                                maxlength="200">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Сообщение..." maxlength="200">
                             <button class="chat-send" onclick="sendMessage()">➤</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Правая колонка - Онлайн игроки -->
+            <!-- Правая колонка - Онлайн -->
             <div class="right-column">
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">👥 Онлайн</span>
-                        <span id="online-count" style="color: #4ade80; font-weight: bold;">0</span>
+                        <span id="online-count" style="color: #4ade80;">0</span>
                     </div>
                     <div class="players-list" id="players-list">
-                        <div style="text-align: center; padding: 30px; color: rgba(255,255,255,0.5);">
-                            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 0 auto 15px;"></div>
-                            <p>Загрузка игроков...</p>
+                        <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">
+                            Загрузка...
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- Мобильная навигация -->
         <div class="mobile-nav">
             <div class="nav-items">
-                <div class="nav-item active" data-section="home">
+                <div class="nav-item active">
                     <span class="nav-icon">🏠</span>
                     <span>Главная</span>
                 </div>
-                <div class="nav-item" data-section="profile">
+                <div class="nav-item">
                     <span class="nav-icon">👤</span>
                     <span>Профиль</span>
                 </div>
-                <div class="nav-item" data-section="connections" onclick="openConnections()">
-                    <span class="nav-icon">🤝</span>
-                    <span>Connections</span>
-                </div>
-                <div class="nav-item" data-section="chat">
+                <div class="nav-item">
                     <span class="nav-icon">💬</span>
                     <span>Чат</span>
                 </div>
-                <div class="nav-item" data-section="shop">
+                <div class="nav-item">
                     <span class="nav-icon">🛒</span>
                     <span>Магазин</span>
                 </div>
@@ -1200,52 +1046,7 @@
     </div>
 
     <!-- ==========================================
-         ЭКРАН CONNECTIONS (ДРУЗЬЯ)
-         ========================================== -->
-    <div class="connections-screen" id="connections-screen">
-        <div class="connections-header">
-            <div class="connections-title-container">
-                <span class="connections-title">🤝 Connections</span>
-                <button class="btn-add-connection" onclick="openAddConnection()">
-                    <span>➕</span>
-                    <span>Add Connection</span>
-                </button>
-            </div>
-            <button class="btn-back" onclick="closeConnections()">← Назад</button>
-        </div>
-
-        <div class="connections-content">
-            <!-- Вкладки -->
-            <div class="connections-tabs">
-                <button class="connections-tab active" onclick="showConnectionsTab('all')">
-                    Все <span id="connections-count-all">0</span>
-                </button>
-                <button class="connections-tab" onclick="showConnectionsTab('online')">
-                    Онлайн <span id="connections-count-online">0</span>
-                </button>
-                <button class="connections-tab" onclick="showConnectionsTab('requests')">
-                    Запросы <span id="connections-count-requests">0</span>
-                </button>
-            </div>
-
-            <!-- Список друзей -->
-            <div class="connections-list" id="connections-list">
-                <!-- Пустое состояние -->
-                <div class="empty-connections" id="empty-connections">
-                    <div class="empty-connections-icon">🤝</div>
-                    <h3>У вас пока нет Connections</h3>
-                    <p>Добавьте друзей, чтобы играть вместе!</p>
-                    <button class="btn-add-connection" onclick="openAddConnection()">
-                        <span>➕</span>
-                        <span>Add Connection</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==========================================
-         МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ДРУГА
+         МОДАЛЬНОЕ ОКНО ADD CONNECTION
          ========================================== -->
     <div class="modal" id="add-connection-modal">
         <div class="modal-content">
@@ -1253,19 +1054,16 @@
                 <span class="modal-title">➕ Add Connection</span>
                 <button class="modal-close" onclick="closeAddConnection()">×</button>
             </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <label>🔍 Поиск по имени пользователя</label>
-                    <input 
-                        type="text" 
-                        id="search-username" 
-                        placeholder="Введите имя пользователя..."
-                        oninput="searchUsers()">
-                </div>
+            
+            <div class="input-group">
+                <label>🔍 Поиск по имени</label>
+                <input type="text" id="search-username" placeholder="Введите имя..." oninput="searchUsers()">
+            </div>
 
-                <div class="search-results" id="search-results">
-                    <!-- Результаты поиска будут здесь -->
-                </div>
+            <div class="search-results" id="search-results">
+                <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">
+                    Введите имя пользователя для поиска
+                </p>
             </div>
         </div>
     </div>
@@ -1292,30 +1090,22 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        console.log('🔥 Firebase инициализирован');
-
         // ==========================================
         // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
         // ==========================================
         let currentUser = null;
         let userProfile = null;
-        let chatUnsubscribe = null;
         let connections = [];
-
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-        console.log('📱 Устройство:', isMobile ? 'Мобильное' : 'ПК');
 
         // ==========================================
         // ИНИЦИАЛИЗАЦИЯ
         // ==========================================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                console.log('✅ Пользователь:', user.email);
                 currentUser = user;
                 await loadUserProfile();
                 initLobby();
             } else {
-                console.log('❌ Не авторизован, перенаправление...');
                 window.location.href = '../index.html';
             }
         });
@@ -1326,30 +1116,18 @@
                 
                 if (doc.exists) {
                     userProfile = doc.data();
-                    console.log('✅ Профиль загружен:', userProfile.username);
                 } else {
-                    console.warn('⚠️ Профиль не найден, создание...');
                     userProfile = {
                         username: currentUser.displayName || currentUser.email.split('@')[0],
                         email: currentUser.email,
-                        stats: {
-                            gamesPlayed: 0,
-                            wins: 0,
-                            highScore: 0,
-                            totalPlayTime: 0,
-                            level: 1,
-                            coins: 100,
-                            gems: 10
-                        },
+                        stats: { level: 1, coins: 100, gems: 10, highScore: 0, totalPlayTime: 0 },
                         connections: [],
-                        connectionRequests: [],
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        connectionRequests: []
                     };
-                    
                     await db.collection('users').doc(currentUser.uid).set(userProfile);
                 }
             } catch (error) {
-                console.error('❌ Ошибка загрузки профиля:', error);
+                console.error('Ошибка загрузки профиля:', error);
             }
         }
 
@@ -1358,63 +1136,44 @@
             document.getElementById('lobby-main').style.display = 'block';
 
             updateUI();
-            loadOnlinePlayers();
             loadConnections();
+            loadOnlinePlayers();
             listenToChat();
             setOnlineStatus(true);
-            setupMobileNav();
-
-            console.log('✅ Лобби инициализировано');
         }
 
         function updateUI() {
-            const username = userProfile?.username || currentUser.displayName || 'Игрок';
-            const avatarUrl = userProfile?.photoURL || currentUser.photoURL || 
-                            `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
+            const username = userProfile?.username || 'Игрок';
+            const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`;
             const stats = userProfile?.stats || {};
 
-            // Шапка
             document.getElementById('header-username').textContent = username;
             document.getElementById('header-avatar').src = avatarUrl;
             document.getElementById('header-level').textContent = stats.level || 1;
             document.getElementById('user-coins').textContent = stats.coins || 0;
             document.getElementById('user-gems').textContent = stats.gems || 0;
 
-            // Профиль
-            const profileName = document.getElementById('profile-name');
-            if (profileName) {
-                profileName.textContent = username;
-                document.getElementById('profile-email').textContent = currentUser.email;
-                document.getElementById('profile-avatar').src = avatarUrl;
-
-                document.getElementById('stat-connections').textContent = 
-                    (userProfile?.connections || []).length;
-                document.getElementById('stat-level').textContent = stats.level || 1;
-                document.getElementById('stat-highscore').textContent = stats.highScore || 0;
-                
-                const hours = Math.floor((stats.totalPlayTime || 0) / 3600);
-                document.getElementById('stat-playtime').textContent = hours + 'ч';
-            }
+            document.getElementById('profile-name').textContent = username;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-avatar').src = avatarUrl;
+            document.getElementById('stat-connections').textContent = (userProfile?.connections || []).length;
+            document.getElementById('stat-level').textContent = stats.level || 1;
+            document.getElementById('stat-highscore').textContent = stats.highScore || 0;
+            
+            const hours = Math.floor((stats.totalPlayTime || 0) / 3600);
+            document.getElementById('stat-playtime').textContent = hours + 'ч';
         }
 
         // ==========================================
-        // CONNECTIONS (ДРУЗЬЯ)
+        // CONNECTIONS
         // ==========================================
-        function openConnections() {
-            document.getElementById('connections-screen').classList.add('show');
-            loadConnections();
-        }
-
-        function closeConnections() {
-            document.getElementById('connections-screen').classList.remove('show');
-        }
-
         async function loadConnections() {
             try {
                 const connectionIds = userProfile?.connections || [];
                 connections = [];
 
-                let onlineCount = 0;
+                document.getElementById('connections-total').textContent = 
+                    connectionIds.length + ' ' + getWordForm(connectionIds.length, ['друг', 'друга', 'друзей']);
 
                 if (connectionIds.length === 0) {
                     renderConnections();
@@ -1424,137 +1183,62 @@
                 for (const connId of connectionIds) {
                     const doc = await db.collection('users').doc(connId).get();
                     if (doc.exists) {
-                        const data = doc.data();
-                        connections.push({ id: doc.id, ...data });
-                        if (data.isOnline) onlineCount++;
+                        connections.push({ id: doc.id, ...doc.data() });
                     }
                 }
-
-                // Обновляем счетчики
-                document.getElementById('connections-count-all').textContent = connections.length;
-                document.getElementById('connections-count-online').textContent = onlineCount;
-                document.getElementById('connections-count-requests').textContent = 
-                    (userProfile?.connectionRequests || []).length;
 
                 renderConnections();
 
             } catch (error) {
-                console.error('❌ Ошибка загрузки connections:', error);
+                console.error('Ошибка загрузки connections:', error);
             }
         }
 
-        function renderConnections(filter = 'all') {
-            const list = document.getElementById('connections-list');
-            const emptyState = document.getElementById('empty-connections');
+        function renderConnections() {
+            const scroll = document.getElementById('connections-scroll');
+            const empty = document.getElementById('connections-empty');
 
-            let filteredConnections = connections;
-
-            if (filter === 'online') {
-                filteredConnections = connections.filter(c => c.isOnline);
-            }
-
-            if (filteredConnections.length === 0) {
-                list.innerHTML = '';
-                list.appendChild(emptyState);
-                emptyState.style.display = 'block';
+            if (connections.length === 0) {
+                scroll.innerHTML = '';
+                scroll.appendChild(empty);
+                empty.style.display = 'flex';
                 return;
             }
 
-            emptyState.style.display = 'none';
+            empty.style.display = 'none';
             
-            list.innerHTML = filteredConnections.map(conn => {
+            scroll.innerHTML = connections.map(conn => {
                 const avatar = conn.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${conn.id}`;
                 const statusClass = conn.isOnline ? 'online' : 'offline';
-                const statusText = conn.isOnline ? '🟢 Онлайн' : '⚫ Офлайн';
 
                 return `
-                    <div class="connection-item">
-                        <img class="connection-avatar" src="${avatar}" alt="">
-                        <div class="connection-info">
-                            <div class="connection-name">${escapeHtml(conn.username || 'Игрок')}</div>
-                            <div class="connection-status ${statusClass}">${statusText}</div>
+                    <div class="connection-card" onclick="viewConnection('${conn.id}')">
+                        <div class="connection-avatar-container">
+                            <img class="connection-avatar" src="${avatar}" alt="">
+                            <div class="connection-status-dot ${statusClass}"></div>
                         </div>
-                        <div class="connection-actions">
-                            <button class="btn-connection-action btn-message" onclick="messageConnection('${conn.id}')">
-                                💬 Написать
-                            </button>
-                            <button class="btn-connection-action btn-remove" onclick="removeConnection('${conn.id}')">
-                                ✖
-                            </button>
-                        </div>
+                        <div class="connection-name">${escapeHtml(conn.username || 'Игрок')}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function showConnectionsTab(tab) {
-            document.querySelectorAll('.connections-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (tab === 'requests') {
-                renderConnectionRequests();
-            } else {
-                renderConnections(tab);
+        function viewConnection(userId) {
+            const conn = connections.find(c => c.id === userId);
+            if (conn) {
+                const status = conn.isOnline ? '🟢 Онлайн' : '⚫ Офлайн';
+                showNotification(`${conn.username}\n${status}\n⭐ Уровень ${conn.stats?.level || 1}`, 'info');
             }
-        }
-
-        async function renderConnectionRequests() {
-            const list = document.getElementById('connections-list');
-            const requests = userProfile?.connectionRequests || [];
-
-            if (requests.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-connections">
-                        <div class="empty-connections-icon">📭</div>
-                        <h3>Нет запросов</h3>
-                        <p>У вас нет входящих запросов на добавление</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let html = '';
-
-            for (const reqId of requests) {
-                try {
-                    const doc = await db.collection('users').doc(reqId).get();
-                    if (doc.exists) {
-                        const user = doc.data();
-                        const avatar = user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${reqId}`;
-
-                        html += `
-                            <div class="connection-item">
-                                <img class="connection-avatar" src="${avatar}" alt="">
-                                <div class="connection-info">
-                                    <div class="connection-name">${escapeHtml(user.username || 'Игрок')}</div>
-                                    <div class="connection-status">Хочет добавить вас</div>
-                                </div>
-                                <div class="connection-actions">
-                                    <button class="btn-connection-action btn-add" onclick="acceptConnection('${reqId}')">
-                                        ✓ Принять
-                                    </button>
-                                    <button class="btn-connection-action btn-remove" onclick="declineConnection('${reqId}')">
-                                        ✖ Отклонить
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки запроса:', error);
-                }
-            }
-
-            list.innerHTML = html;
         }
 
         // ==========================================
-        // ДОБАВЛЕНИЕ ДРУГА
+        // ADD CONNECTION
         // ==========================================
         function openAddConnection() {
             document.getElementById('add-connection-modal').classList.add('show');
             document.getElementById('search-username').value = '';
-            document.getElementById('search-results').innerHTML = '';
+            document.getElementById('search-results').innerHTML = 
+                '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Введите имя для поиска</p>';
         }
 
         function closeAddConnection() {
@@ -1564,40 +1248,39 @@
         let searchTimeout;
         async function searchUsers() {
             const query = document.getElementById('search-username').value.trim().toLowerCase();
-            const resultsContainer = document.getElementById('search-results');
+            const results = document.getElementById('search-results');
 
             if (query.length < 2) {
-                resultsContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">Введите минимум 2 символа</p>';
+                results.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Минимум 2 символа</p>';
                 return;
             }
 
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(async () => {
                 try {
-                    resultsContainer.innerHTML = '<div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>';
+                    results.innerHTML = '<div class="loading-spinner" style="width:30px;height:30px;margin:20px auto;"></div>';
 
-                    const snapshot = await db.collection('users').limit(20).get();
-                    
-                    let results = [];
+                    const snapshot = await db.collection('users').limit(30).get();
+                    let found = [];
+
                     snapshot.forEach(doc => {
                         const data = doc.data();
                         const username = (data.username || '').toLowerCase();
                         
-                        // Не показываем себя и уже добавленных
                         if (doc.id !== currentUser.uid && 
                             username.includes(query) &&
                             !(userProfile?.connections || []).includes(doc.id)) {
-                            results.push({ id: doc.id, ...data });
+                            found.push({ id: doc.id, ...data });
                         }
                     });
 
-                    if (results.length === 0) {
-                        resultsContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">Пользователи не найдены</p>';
+                    if (found.length === 0) {
+                        results.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Не найдено</p>';
                         return;
                     }
 
-                    resultsContainer.innerHTML = results.map(user => {
-                        const avatar = user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`;
+                    results.innerHTML = found.slice(0, 10).map(user => {
+                        const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`;
                         return `
                             <div class="search-result-item">
                                 <img class="search-result-avatar" src="${avatar}" alt="">
@@ -1605,102 +1288,28 @@
                                     <div class="search-result-name">${escapeHtml(user.username || 'Игрок')}</div>
                                     <div class="search-result-level">⭐ Уровень ${user.stats?.level || 1}</div>
                                 </div>
-                                <button class="btn-add" onclick="sendConnectionRequest('${user.id}', '${escapeHtml(user.username || 'Игрок')}')">
-                                    ➕ Добавить
-                                </button>
+                                <button class="btn-add" onclick="sendRequest('${user.id}', '${escapeHtml(user.username)}')">➕ Добавить</button>
                             </div>
                         `;
                     }).join('');
 
                 } catch (error) {
-                    console.error('❌ Ошибка поиска:', error);
-                    resultsContainer.innerHTML = '<p style="color: #e74c3c; text-align: center;">Ошибка поиска</p>';
+                    results.innerHTML = '<p style="color: #e74c3c; text-align: center;">Ошибка поиска</p>';
                 }
             }, 500);
         }
 
-        async function sendConnectionRequest(userId, username) {
+        async function sendRequest(userId, username) {
             try {
-                // Добавляем запрос пользователю
                 await db.collection('users').doc(userId).update({
                     connectionRequests: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
                 });
 
                 showNotification(`✅ Запрос отправлен ${username}`, 'success');
                 closeAddConnection();
-
             } catch (error) {
-                console.error('❌ Ошибка отправки запроса:', error);
-                showNotification('❌ Ошибка отправки запроса', 'error');
-            }
-        }
-
-        async function acceptConnection(userId) {
-            try {
-                // Добавляем друг друга в connections
-                await db.collection('users').doc(currentUser.uid).update({
-                    connections: firebase.firestore.FieldValue.arrayUnion(userId),
-                    connectionRequests: firebase.firestore.FieldValue.arrayRemove(userId)
-                });
-
-                await db.collection('users').doc(userId).update({
-                    connections: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-                });
-
-                // Обновляем локальный профиль
-                userProfile.connections = [...(userProfile.connections || []), userId];
-                userProfile.connectionRequests = (userProfile.connectionRequests || []).filter(id => id !== userId);
-
-                showNotification('✅ Connection добавлен!', 'success');
-                loadConnections();
-
-            } catch (error) {
-                console.error('❌ Ошибка принятия запроса:', error);
                 showNotification('❌ Ошибка', 'error');
             }
-        }
-
-        async function declineConnection(userId) {
-            try {
-                await db.collection('users').doc(currentUser.uid).update({
-                    connectionRequests: firebase.firestore.FieldValue.arrayRemove(userId)
-                });
-
-                userProfile.connectionRequests = (userProfile.connectionRequests || []).filter(id => id !== userId);
-
-                showNotification('Запрос отклонён', 'info');
-                loadConnections();
-
-            } catch (error) {
-                console.error('❌ Ошибка отклонения запроса:', error);
-            }
-        }
-
-        async function removeConnection(userId) {
-            if (!confirm('Удалить этого пользователя из Connections?')) return;
-
-            try {
-                // Удаляем друг у друга
-                await db.collection('users').doc(currentUser.uid).update({
-                    connections: firebase.firestore.FieldValue.arrayRemove(userId)
-                });
-
-                await db.collection('users').doc(userId).update({
-                    connections: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-                });
-
-                userProfile.connections = (userProfile.connections || []).filter(id => id !== userId);
-
-                showNotification('Connection удалён', 'info');
-                loadConnections();
-
-            } catch (error) {
-                console.error('❌ Ошибка удаления:', error);
-            }
-        }
-
-        function messageConnection(userId) {
-            showNotification('💬 Личные сообщения скоро будут доступны!', 'info');
         }
 
         // ==========================================
@@ -1708,62 +1317,40 @@
         // ==========================================
         async function loadOnlinePlayers() {
             try {
-                const snapshot = await db.collection('users').limit(50).get();
-
-                const playersList = document.getElementById('players-list');
-                playersList.innerHTML = '';
-
+                const snapshot = await db.collection('users').limit(30).get();
+                const list = document.getElementById('players-list');
                 let onlineCount = 0;
-                const onlinePlayers = [];
+                let html = '';
 
                 snapshot.forEach(doc => {
                     const player = doc.data();
-                    
-                    if (player.isOnline === true && doc.id !== currentUser.uid) {
-                        onlinePlayers.push({ id: doc.id, ...player });
+                    if (player.isOnline && doc.id !== currentUser.uid) {
                         onlineCount++;
+                        const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${doc.id}`;
+                        html += `
+                            <div class="player-item" onclick="viewPlayer('${doc.id}', '${escapeHtml(player.username)}')">
+                                <img class="player-avatar-small" src="${avatar}" alt="">
+                                <div class="player-info">
+                                    <div class="player-name">${escapeHtml(player.username || 'Игрок')}</div>
+                                    <div class="player-status">🟢 В сети</div>
+                                </div>
+                                <div class="online-dot"></div>
+                            </div>
+                        `;
                     }
                 });
 
-                onlinePlayers.sort((a, b) => {
-                    const timeA = a.lastLogin?.toDate ? a.lastLogin.toDate().getTime() : 0;
-                    const timeB = b.lastLogin?.toDate ? b.lastLogin.toDate().getTime() : 0;
-                    return timeB - timeA;
-                });
-
-                onlinePlayers.slice(0, 20).forEach(player => {
-                    const playerEl = document.createElement('div');
-                    playerEl.className = 'player-item';
-                    
-                    const avatar = player.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.id}`;
-                    
-                    playerEl.innerHTML = `
-                        <img class="player-avatar-small" src="${avatar}" alt="">
-                        <div class="player-info">
-                            <div class="player-name">${escapeHtml(player.username || 'Игрок')}</div>
-                            <div class="player-status">🟢 В сети</div>
-                        </div>
-                        <div class="online-dot"></div>
-                    `;
-                    
-                    playerEl.onclick = () => viewPlayer(player.id, player);
-                    playersList.appendChild(playerEl);
-                });
-
                 document.getElementById('online-count').textContent = onlineCount;
-
-                if (onlineCount === 0) {
-                    playersList.innerHTML = `
-                        <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 30px;">
-                            <p style="font-size: 40px; margin-bottom: 10px;">👥</p>
-                            <p>Никого нет онлайн</p>
-                        </div>
-                    `;
-                }
+                list.innerHTML = html || '<p style="text-align:center;padding:20px;color:rgba(255,255,255,0.5);">Никого нет</p>';
 
             } catch (error) {
-                console.error('❌ Ошибка загрузки игроков:', error);
+                console.error('Ошибка:', error);
             }
+        }
+
+        function viewPlayer(id, name) {
+            const isConn = (userProfile?.connections || []).includes(id);
+            showNotification(`${name}\n${isConn ? '✅ В Connections' : ''}`, 'info');
         }
 
         async function setOnlineStatus(status) {
@@ -1772,75 +1359,42 @@
                     isOnline: status,
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            } catch (error) {
-                console.error('Ошибка обновления статуса:', error);
-            }
-        }
-
-        function viewPlayer(playerId, player) {
-            const isConnection = (userProfile?.connections || []).includes(playerId);
-            const message = isConnection ? 
-                `👤 ${player.username}\n⭐ Уровень ${player.stats?.level || 1}\n✅ В ваших Connections` :
-                `👤 ${player.username}\n⭐ Уровень ${player.stats?.level || 1}`;
-            
-            showNotification(message, 'info');
+            } catch (e) {}
         }
 
         // ==========================================
         // ЧАТ
         // ==========================================
         function listenToChat() {
-            chatUnsubscribe = db.collection('chat')
-                .orderBy('timestamp', 'desc')
-                .limit(50)
-                .onSnapshot(
-                    snapshot => {
-                        const messages = [];
-                        snapshot.forEach(doc => {
-                            messages.push({ id: doc.id, ...doc.data() });
-                        });
-                        renderChat(messages.reverse());
-                    },
-                    error => {
-                        console.error('❌ Ошибка чата:', error);
-                    }
-                );
+            db.collection('chat').orderBy('timestamp', 'desc').limit(50)
+                .onSnapshot(snapshot => {
+                    const messages = [];
+                    snapshot.forEach(doc => messages.push(doc.data()));
+                    renderChat(messages.reverse());
+                }, error => {});
         }
 
         function renderChat(messages) {
-            const chatMessages = document.getElementById('chat-messages');
-            
-            if (messages.length === 0) {
-                chatMessages.innerHTML = `
-                    <div class="chat-message">
-                        <div class="chat-message-user">🤖 Система</div>
-                        <div class="chat-message-text">Чат пуст. Напишите первое сообщение!</div>
-                    </div>
-                `;
+            const el = document.getElementById('chat-messages');
+            if (!messages.length) {
+                el.innerHTML = '<div class="chat-message"><div class="chat-message-user">🤖 Система</div><div class="chat-message-text">Чат пуст</div></div>';
                 return;
             }
             
-            chatMessages.innerHTML = messages.map(msg => `
+            el.innerHTML = messages.map(m => `
                 <div class="chat-message">
-                    <div class="chat-message-user">${escapeHtml(msg.username || 'Аноним')}</div>
-                    <div class="chat-message-text">${escapeHtml(msg.text || '')}</div>
-                    <div class="chat-message-time">${formatTime(msg.timestamp)}</div>
+                    <div class="chat-message-user">${escapeHtml(m.username || 'Аноним')}</div>
+                    <div class="chat-message-text">${escapeHtml(m.text || '')}</div>
+                    <div class="chat-message-time">${formatTime(m.timestamp)}</div>
                 </div>
             `).join('');
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            el.scrollTop = el.scrollHeight;
         }
 
         async function sendMessage() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
-
             if (!text) return;
-
-            if (text.length > 200) {
-                showNotification('Сообщение слишком длинное', 'error');
-                return;
-            }
 
             try {
                 await db.collection('chat').add({
@@ -1849,125 +1403,67 @@
                     text: text,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-
                 input.value = '';
-            } catch (error) {
-                console.error('❌ Ошибка отправки:', error);
-                showNotification('Ошибка отправки', 'error');
+            } catch (e) {
+                showNotification('Ошибка', 'error');
             }
         }
 
-        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+        document.getElementById('chat-input').addEventListener('keypress', e => {
             if (e.key === 'Enter') sendMessage();
         });
 
+        // ==========================================
+        // МАГАЗИН
+        // ==========================================
+        function buyItem(id) {
+            showNotification('🛒 Магазин скоро будет доступен!', 'info');
+        }
+
+        // ==========================================
+        // УТИЛИТЫ
+        // ==========================================
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        function formatTime(timestamp) {
-            if (!timestamp) return 'Сейчас';
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        function formatTime(ts) {
+            if (!ts) return '';
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         }
 
-        // ==========================================
-        // МАГАЗИН
-        // ==========================================
-        function buyItem(itemId) {
-            const items = {
-                'coins100': { name: '100 монет', price: 10, currency: 'gems', icon: '💰' },
-                'skin1': { name: 'Скин #1', price: 500, currency: 'coins', icon: '👕' },
-                'boost': { name: 'Буст x2', price: 25, currency: 'gems', icon: '⚡' },
-                'vip': { name: 'VIP', price: 100, currency: 'gems', icon: '👑' }
-            };
-
-            const item = items[itemId];
-            if (!item) return;
-
-            const balance = userProfile?.stats?.[item.currency] || 0;
-
-            if (balance >= item.price) {
-                showNotification(`✅ Вы купили: ${item.icon} ${item.name}`, 'success');
-            } else {
-                const currencyIcon = item.currency === 'gems' ? '💎' : '💰';
-                showNotification(`❌ Недостаточно ${currencyIcon}`, 'error');
-            }
+        function getWordForm(n, forms) {
+            n = Math.abs(n) % 100;
+            const n1 = n % 10;
+            if (n > 10 && n < 20) return forms[2];
+            if (n1 > 1 && n1 < 5) return forms[1];
+            if (n1 === 1) return forms[0];
+            return forms[2];
         }
 
-        // ==========================================
-        // МОБИЛЬНАЯ НАВИГАЦИЯ
-        // ==========================================
-        function setupMobileNav() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    
-                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    if (section === 'connections') {
-                        openConnections();
-                    } else if (isMobile) {
-                        scrollToSection(section);
-                    }
-                });
-            });
-        }
-
-        function scrollToSection(section) {
-            const scrollTarget = {
-                'home': '.lobby-header',
-                'profile': '.profile-card',
-                'shop': '.shop-items',
-                'chat': '.chat-container'
-            };
-
-            const target = document.querySelector(scrollTarget[section]);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        // ==========================================
-        // УВЕДОМЛЕНИЯ
-        // ==========================================
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = message.replace(/\n/g, '<br>');
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s';
-                setTimeout(() => notification.remove(), 300);
-            }, 4000);
+        function showNotification(msg, type = 'success') {
+            const el = document.createElement('div');
+            el.className = `notification ${type}`;
+            el.innerHTML = msg.replace(/\n/g, '<br>');
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3500);
         }
 
         // ==========================================
         // ВЫХОД
         // ==========================================
         async function handleLogout() {
-            if (confirm('Вы уверены, что хотите выйти?')) {
-                try {
-                    await setOnlineStatus(false);
-                    if (chatUnsubscribe) chatUnsubscribe();
-                    await auth.signOut();
-                } catch (error) {
-                    console.error('❌ Ошибка выхода:', error);
-                }
+            if (confirm('Выйти?')) {
+                await setOnlineStatus(false);
+                await auth.signOut();
             }
         }
 
-        window.addEventListener('beforeunload', () => {
-            setOnlineStatus(false);
-        });
-
+        window.addEventListener('beforeunload', () => setOnlineStatus(false));
         setInterval(loadOnlinePlayers, 30000);
-
-        console.log('✅ Лобби загружено полностью');
     </script>
 </body>
 </html>
